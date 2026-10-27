@@ -77,12 +77,9 @@ export default function Hero() {
               </span>
             </div>
 
-            {/* Main Headline with Vintage Editorial Serif Accent */}
-            <h1 className="text-3xl sm:text-5xl lg:text-[3.25rem] font-bold text-[#f5f0e6] tracking-tight leading-[1.18] font-heading">
-              Membangun antarmuka web yang{' '}
-              <span className="text-[#4b92e6] italic font-normal">
-                terstruktur, cepat, dan presisi.
-              </span>
+            {/* Main Headline (Clean, Human, Modern & Canggih) */}
+            <h1 className="text-3xl sm:text-5xl lg:text-[3.35rem] font-bold text-[#f8fafc] tracking-[-0.03em] leading-[1.14]">
+              Perancangan antarmuka web modern dengan arsitektur yang terstruktur dan presisi.
             </h1>
 
             {/* Natural Human Subtitle */}

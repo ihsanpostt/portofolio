@@ -28,9 +28,10 @@ export default {
         }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
         heading: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'Fira Code', 'monospace'],
+        serif: ['"Playfair Display"', 'Georgia', 'Cambria', 'serif'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       boxShadow: {
         'card': '0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3)',
