@@ -143,15 +143,90 @@ section[id] {
   }
 }
 
-/* Vintage Cyanotype Interactive Accents */
+/* Vintage Cyanotype Interactive Accents & Architectural Details */
 .card-premium {
   background: #0f1a30;
   border: 1px solid #1e355b;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
 }
 
 .card-premium:hover {
   border-color: #3b82d6;
-  box-shadow: 0 14px 30px -10px rgba(5, 12, 26, 0.7);
+  box-shadow: 0 16px 36px -12px rgba(3, 8, 20, 0.8);
   transform: translateY(-2px);
+}
+
+/* Tactile button push feedback for a tangible, human feel */
+button:active:not(:disabled),
+a:active:not([disabled]) {
+  transform: scale(0.98);
+  transition: transform 0.08s ease;
+}
+
+/* Architectural Corner Registration Crosshairs */
+.blueprint-crosshair {
+  position: relative;
+}
+
+.blueprint-crosshair::before,
+.blueprint-crosshair::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  pointer-events: none;
+  opacity: 0.4;
+  transition: opacity 0.2s ease;
+}
+
+.blueprint-crosshair:hover::before,
+.blueprint-crosshair:hover::after {
+  opacity: 0.9;
+}
+
+.blueprint-crosshair::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1.5px solid #4b92e6;
+  border-left: 1.5px solid #4b92e6;
+}
+
+.blueprint-crosshair::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1.5px solid #4b92e6;
+  border-right: 1.5px solid #4b92e6;
+}
+
+/* Technical Blueprint Badge */
+.badge-blueprint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.375rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background-color: rgba(22, 37, 68, 0.7);
+  border: 1px solid rgba(49, 120, 198, 0.25);
+  color: #9db2d4;
+}
+
+/* Subtle Organic Pulse Animation for Status Indicators */
+@keyframes rhythmicPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.75;
+  }
+}
+
+.animate-rhythmic-pulse {
+  animation: rhythmicPulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

@@ -58,17 +58,24 @@ export default function Hero() {
             className="lg:col-span-7 space-y-6 text-left"
           >
             {/* Status Pill Badge with Direct Contact Shortcut */}
-            <button
-              onClick={() => scrollTo('contact')}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0f1a30] hover:bg-[#162544] border border-[#1e355b] hover:border-[#d4a359]/60 text-xs font-mono text-[#9db2d4] transition-colors cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6]"
-              title="Klik untuk membuka formulir diskusi atau tawaran proyek"
-            >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#38a98c] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#38a98c]"></span>
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                onClick={() => scrollTo('contact')}
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0f1a30] hover:bg-[#162544] border border-[#1e355b] hover:border-[#38a98c]/60 text-xs font-mono text-[#9db2d4] transition-colors cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6]"
+                title="Klik untuk membuka formulir diskusi atau tawaran proyek"
+              >
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#38a98c] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#38a98c]"></span>
+                </span>
+                <span className="group-hover:text-[#f5f0e6] transition-colors">{personalInfo.status}</span>
+              </button>
+
+              <span className="hidden sm:inline-flex items-center gap-1.5 font-mono text-[11px] text-[#6780a4] uppercase tracking-wider">
+                <span className="text-[#3178c6]">•</span>
+                <span>Malang, Jawa Timur</span>
               </span>
-              <span className="group-hover:text-[#f5f0e6] transition-colors">{personalInfo.status}</span>
-            </button>
+            </div>
 
             {/* Main Headline with Vintage Editorial Serif Accent */}
             <h1 className="text-3xl sm:text-5xl lg:text-[3.25rem] font-bold text-[#f5f0e6] tracking-tight leading-[1.18] font-heading">
@@ -87,7 +94,7 @@ export default function Hero() {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
               <button
                 onClick={() => scrollTo('portfolio')}
-                className="w-full sm:w-auto min-h-[44px] px-6 py-2.5 rounded-xl font-medium text-sm text-white bg-[#3178c6] hover:bg-[#2664a7] transition-colors duration-150 shadow-sm border border-[#4b92e6]/30 flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] cursor-pointer"
+                className="w-full sm:w-auto min-h-[44px] px-6 py-2.5 rounded-xl font-medium text-sm text-white bg-[#3178c6] hover:bg-[#2664a7] transition-all duration-150 shadow-sm border border-[#4b92e6]/30 flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] cursor-pointer hover:shadow-md hover:shadow-[#3178c6]/20"
               >
                 <span>Jelajahi Proyek</span>
                 <ArrowRight className="w-4 h-4 opacity-80" />
@@ -111,52 +118,58 @@ export default function Hero() {
               </button>
             </div>
 
-            {/* Social Links Row */}
-            <div className="flex items-center gap-4 pt-4 border-t border-[#1e355b]/70">
-              <span className="text-xs font-mono text-[#6780a4] uppercase tracking-wider">
-                Profil:
-              </span>
-              <div className="flex items-center gap-2">
-                <a
-                  href={personalInfo.socials.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-[#9db2d4] hover:text-[#f5f0e6] hover:bg-[#0f1a30] border border-transparent hover:border-[#1e355b] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6]"
-                  aria-label="Profil GitHub"
-                >
-                  <Github className="w-4 h-4" />
-                </a>
-                <a
-                  href={personalInfo.socials.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-[#9db2d4] hover:text-[#f5f0e6] hover:bg-[#0f1a30] border border-transparent hover:border-[#1e355b] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6]"
-                  aria-label="Profil LinkedIn"
-                >
-                  <Linkedin className="w-4 h-4" />
-                </a>
-                <a
-                  href={personalInfo.socials.instagram}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-[#9db2d4] hover:text-[#f5f0e6] hover:bg-[#0f1a30] border border-transparent hover:border-[#1e355b] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6]"
-                  aria-label="Profil Instagram"
-                >
-                  <Instagram className="w-4 h-4" />
-                </a>
+            {/* Social Links Row with Architectural Spec Tag */}
+            <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-[#1e355b]/70">
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-mono text-[#6780a4] uppercase tracking-wider">
+                  Saluran:
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <a
+                    href={personalInfo.socials.github}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2 min-h-[40px] min-w-[40px] flex items-center justify-center rounded-lg text-[#9db2d4] hover:text-[#f5f0e6] hover:bg-[#0f1a30] border border-transparent hover:border-[#1e355b] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6]"
+                    aria-label="Profil GitHub"
+                  >
+                    <Github className="w-4 h-4" />
+                  </a>
+                  <a
+                    href={personalInfo.socials.linkedin}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2 min-h-[40px] min-w-[40px] flex items-center justify-center rounded-lg text-[#9db2d4] hover:text-[#f5f0e6] hover:bg-[#0f1a30] border border-transparent hover:border-[#1e355b] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6]"
+                    aria-label="Profil LinkedIn"
+                  >
+                    <Linkedin className="w-4 h-4" />
+                  </a>
+                  <a
+                    href={personalInfo.socials.instagram}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2 min-h-[40px] min-w-[40px] flex items-center justify-center rounded-lg text-[#9db2d4] hover:text-[#f5f0e6] hover:bg-[#0f1a30] border border-transparent hover:border-[#1e355b] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6]"
+                    aria-label="Profil Instagram"
+                  >
+                    <Instagram className="w-4 h-4" />
+                  </a>
+                </div>
+              </div>
+
+              <div className="font-mono text-[10px] text-[#6780a4] tracking-wider uppercase">
+                [ SPEC: REACT • POLINEMA • 2025 ]
               </div>
             </div>
 
           </motion.div>
 
-          {/* Right Column: Clean Professional Developer Portrait */}
+          {/* Right Column: Clean Professional Developer Portrait with Blueprint Crosshairs */}
           <motion.div 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.25, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-5 flex justify-center lg:justify-end"
           >
-            <div className="w-full max-w-sm rounded-2xl bg-[#0f1a30] border border-[#1e355b] p-3 shadow-xl">
+            <div className="blueprint-crosshair w-full max-w-sm rounded-2xl bg-[#0f1a30] border border-[#1e355b] p-3 shadow-xl relative group">
               {/* Photo Frame */}
               <div className="relative aspect-[4/5] w-full rounded-xl overflow-hidden bg-[#0a1222] border border-[#1e355b]/60">
                 <img
@@ -167,9 +180,15 @@ export default function Hero() {
                   decoding="async"
                   width="400"
                   height="500"
-                  className="w-full h-full object-cover object-[center_60%]"
+                  className="w-full h-full object-cover object-[center_60%] group-hover:scale-[1.02] transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0f1a30] via-transparent to-transparent opacity-60" />
+                
+                {/* Official Accredited Badge Overlay */}
+                <div className="absolute top-3 right-3 px-2.5 py-1 rounded-md bg-[#0a1222]/85 backdrop-blur-xs border border-[#1e355b] font-mono text-[10px] text-[#38a98c] flex items-center gap-1.5 shadow-sm">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#38a98c] animate-rhythmic-pulse"></span>
+                  <span>POLINEMA D4 TI</span>
+                </div>
               </div>
 
               {/* Bottom Details Card */}
@@ -180,18 +199,21 @@ export default function Hero() {
                       {personalInfo.name}
                     </h2>
                     <p className="text-xs font-mono text-[#9db2d4]">
-                      D4 Teknik Informatika
+                      Teknik Informatika POLINEMA
                     </p>
                   </div>
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#38a98c]/15 text-[#38a98c] text-xs font-mono border border-[#38a98c]/30">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#38a98c]"></span>
-                    POLINEMA
+                    Kandidat Sarjana Terapan
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 pt-2 border-t border-[#1e355b] text-xs text-[#9db2d4] font-mono">
-                  <MapPin className="w-3.5 h-3.5 text-[#4b92e6] shrink-0" />
-                  <span>{personalInfo.location}</span>
+                <div className="flex items-center justify-between pt-2 border-t border-[#1e355b] text-xs text-[#9db2d4] font-mono">
+                  <div className="flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-[#4b92e6] shrink-0" />
+                    <span>{personalInfo.location}</span>
+                  </div>
+                  <span className="text-[10px] text-[#6780a4]">ID: 21069/2025</span>
                 </div>
               </div>
             </div>
@@ -199,19 +221,19 @@ export default function Hero() {
 
         </div>
 
-        {/* Metrics Strip (Interactive Shortcuts) */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-5 sm:p-6 rounded-2xl bg-[#0f1a30] border border-[#1e355b]">
+        {/* Metrics Strip with Architectural Blueprint Crosshairs */}
+        <div className="blueprint-crosshair grid grid-cols-2 md:grid-cols-4 gap-4 p-5 sm:p-6 rounded-2xl bg-[#0f1a30] border border-[#1e355b] shadow-lg">
           {statsData.map((stat, idx) => {
             const Icon = iconMap[stat.icon] || Code2;
             return (
               <div 
                 key={stat.id}
                 onClick={() => handleStatClick(stat.id)}
-                className={`space-y-1 cursor-pointer group p-2 rounded-xl hover:bg-white/[0.04] transition-colors ${idx !== 0 ? 'md:border-l md:border-[#1e355b] md:pl-6' : ''}`}
+                className={`space-y-1.5 cursor-pointer group p-2.5 rounded-xl hover:bg-[#162544]/60 transition-all ${idx !== 0 ? 'md:border-l md:border-[#1e355b] md:pl-6' : ''}`}
                 title="Klik untuk melihat rincian terkait"
               >
                 <div className="flex items-center gap-2 text-[#9db2d4] mb-1 group-hover:text-[#4b92e6] transition-colors">
-                  <Icon className="w-4 h-4 text-[#3178c6]" />
+                  <Icon className="w-4 h-4 text-[#3178c6] group-hover:scale-110 transition-transform" />
                   <span className="text-xs font-mono font-medium">{stat.label}</span>
                 </div>
                 <div className="text-2xl sm:text-3xl font-bold text-[#f5f0e6] font-heading tracking-tight group-hover:text-[#4b92e6] transition-colors">

@@ -60,53 +60,77 @@ export default function Portfolio() {
     <section id="portfolio" className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-[#1e355b]/70">
       <div className="max-w-6xl mx-auto space-y-12">
 
-        {/* Section Header */}
+        {/* Section Header with Architectural Section Numbering */}
         <div className="space-y-3 max-w-2xl text-left">
-          <span className="text-xs font-mono font-medium text-[#4b92e6] uppercase tracking-wider">
-            Karya & Kualifikasi
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-mono text-[#38a98c] px-2 py-0.5 rounded bg-[#38a98c]/10 border border-[#38a98c]/30">02</span>
+            <span className="text-xs font-mono font-medium text-[#4b92e6] uppercase tracking-widest">
+              Katalog Proyek & Kualifikasi Terverifikasi
+            </span>
+          </div>
           <h2 className="text-2xl sm:text-4xl font-bold text-[#f5f0e6] font-heading tracking-tight">
-            Portofolio & Kemampuan
+            Karya Rekayasa & Keahlian Teknis
           </h2>
           <p className="text-[#9db2d4] text-sm sm:text-base leading-relaxed">
             Daftar aplikasi web yang pernah saya rancang, sertifikat resmi kepanitiaan di POLINEMA, serta susunan teknologi yang saya gunakan.
           </p>
         </div>
 
-        {/* Main Tab Switcher: Full responsive grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 border-b border-[#1e355b] pb-4">
+        {/* Main Tab Switcher: Full responsive grid with Fluid Sliding Pill */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 p-1.5 rounded-2xl bg-[#0a1222] border border-[#1e355b] relative">
           <button
             onClick={() => setActiveTab('projects')}
-            className={`min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer ${
+            className={`relative min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer z-10 ${
               activeTab === 'projects'
-                ? 'bg-[#3178c6] text-white shadow-sm border border-[#4b92e6]/30'
-                : 'text-[#9db2d4] hover:text-[#f5f0e6] bg-[#0f1a30] border border-[#1e355b]'
+                ? 'text-white'
+                : 'text-[#9db2d4] hover:text-[#f5f0e6]'
             }`}
           >
+            {activeTab === 'projects' && (
+              <motion.div
+                layoutId="portfolioActiveTab"
+                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                className="absolute inset-0 bg-[#3178c6] rounded-xl -z-10 shadow-sm border border-[#4b92e6]/30"
+              />
+            )}
             <Layers className="w-4 h-4 shrink-0" />
             <span>Proyek Unggulan ({projectsData.length})</span>
           </button>
 
           <button
             onClick={() => setActiveTab('certificates')}
-            className={`min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer ${
+            className={`relative min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer z-10 ${
               activeTab === 'certificates'
-                ? 'bg-[#3178c6] text-white shadow-sm border border-[#4b92e6]/30'
-                : 'text-[#9db2d4] hover:text-[#f5f0e6] bg-[#0f1a30] border border-[#1e355b]'
+                ? 'text-white'
+                : 'text-[#9db2d4] hover:text-[#f5f0e6]'
             }`}
           >
+            {activeTab === 'certificates' && (
+              <motion.div
+                layoutId="portfolioActiveTab"
+                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                className="absolute inset-0 bg-[#3178c6] rounded-xl -z-10 shadow-sm border border-[#4b92e6]/30"
+              />
+            )}
             <Award className="w-4 h-4 shrink-0" />
             <span>Sertifikat Resmi ({certificatesData.length})</span>
           </button>
 
           <button
             onClick={() => setActiveTab('tech')}
-            className={`min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer ${
+            className={`relative min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer z-10 ${
               activeTab === 'tech'
-                ? 'bg-[#3178c6] text-white shadow-sm border border-[#4b92e6]/30'
-                : 'text-[#9db2d4] hover:text-[#f5f0e6] bg-[#0f1a30] border border-[#1e355b]'
+                ? 'text-white'
+                : 'text-[#9db2d4] hover:text-[#f5f0e6]'
             }`}
           >
+            {activeTab === 'tech' && (
+              <motion.div
+                layoutId="portfolioActiveTab"
+                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                className="absolute inset-0 bg-[#3178c6] rounded-xl -z-10 shadow-sm border border-[#4b92e6]/30"
+              />
+            )}
             <Cpu className="w-4 h-4 shrink-0" />
             <span>Keahlian & Teknologi</span>
           </button>
@@ -117,12 +141,12 @@ export default function Portfolio() {
           <div className="space-y-8">
             {/* Category Filter Pills */}
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-mono text-[#6780a4] mr-2">Filter:</span>
+              <span className="text-xs font-mono text-[#6780a4] mr-2">Filter Kategori:</span>
               {categories.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setProjectFilter(cat)}
-                  className={`min-h-[36px] px-3.5 py-1.5 rounded-lg text-xs font-mono transition-colors ${
+                  className={`min-h-[36px] px-3.5 py-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer ${
                     projectFilter === cat
                       ? 'bg-[#3178c6]/20 text-[#63a3ed] border border-[#3178c6]/40 font-semibold'
                       : 'text-[#9db2d4] hover:text-[#f5f0e6] bg-[#0f1a30] border border-[#1e355b]'
@@ -133,12 +157,12 @@ export default function Portfolio() {
               ))}
             </div>
 
-            {/* Projects Grid */}
+            {/* Projects Grid with Blueprint Crosshair */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProjects.map((project) => (
                 <div
                   key={project.id}
-                  className="rounded-2xl card-premium overflow-hidden flex flex-col justify-between group shadow-lg"
+                  className="blueprint-crosshair rounded-2xl card-premium overflow-hidden flex flex-col justify-between group shadow-lg"
                 >
                   <div>
                     {/* Consistent 16:9 Image Frame */}
@@ -234,7 +258,7 @@ export default function Portfolio() {
             {certificatesData.map((cert) => (
               <div
                 key={cert.id}
-                className="rounded-2xl bg-[#0f1a30] border border-[#1e355b] hover:border-[#2c4d82] transition-all overflow-hidden flex flex-col group shadow-xl"
+                className="blueprint-crosshair rounded-2xl bg-[#0f1a30] border border-[#1e355b] hover:border-[#2c4d82] transition-all overflow-hidden flex flex-col group shadow-xl"
               >
                 {/* Certificate Preview Frame */}
                 <div 

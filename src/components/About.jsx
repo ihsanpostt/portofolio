@@ -16,34 +16,45 @@ export default function About() {
     <section id="about" className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-[#1e355b]/70">
       <div className="max-w-6xl mx-auto space-y-16">
 
-        {/* Section Header */}
+        {/* Section Header with Architectural Section Numbering */}
         <div className="space-y-3 max-w-2xl text-left">
-          <span className="text-xs font-mono font-medium text-[#4b92e6] uppercase tracking-wider">
-            Tentang & Perjalanan
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-mono text-[#38a98c] px-2 py-0.5 rounded bg-[#38a98c]/10 border border-[#38a98c]/30">01</span>
+            <span className="text-xs font-mono font-medium text-[#4b92e6] uppercase tracking-widest">
+              Dokumen Profil & Filosofi Rekayasa
+            </span>
+          </div>
           <h2 className="text-2xl sm:text-4xl font-bold text-[#f5f0e6] font-heading tracking-tight">
-            Latar Belakang & Pengalaman
+            Latar Belakang & Pengalaman Nyata
           </h2>
           <p className="text-[#9db2d4] text-sm sm:text-base leading-relaxed">
-            Kombinasi antara studi ilmu komputer di POLINEMA, latihan mandiri membangun aplikasi web, dan pengalaman kepanitiaan nyata di lapangan.
+            Menghubungkan teori ilmu komputer di POLINEMA, disiplin arsitektur kode modular, dan rekam jejak kepanitiaan berskala ratusan peserta.
           </p>
         </div>
 
         {/* Overview Bio Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
           
-          {/* Main Bio Card */}
-          <div className="lg:col-span-8 p-6 sm:p-8 rounded-2xl bg-[#0f1a30] border border-[#1e355b] space-y-4 flex flex-col justify-between shadow-lg">
-            <div className="space-y-3">
-              <span className="text-xs font-mono text-[#6780a4] uppercase tracking-wider">
-                Profil Ringkas
-              </span>
-              <p className="text-[#f5f0e6] text-sm sm:text-base leading-relaxed">
+          {/* Main Bio Card with Blueprint Crosshair */}
+          <div className="blueprint-crosshair lg:col-span-8 p-6 sm:p-8 rounded-2xl bg-[#0f1a30] border border-[#1e355b] space-y-5 flex flex-col justify-between shadow-lg">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-mono text-[#6780a4] uppercase tracking-wider">
+                  Ikhtisar Personal
+                </span>
+                <span className="text-[10px] font-mono text-[#4b92e6]">DOKUMEN: BIO-01</span>
+              </div>
+              <p className="text-[#f5f0e6] text-sm sm:text-base leading-relaxed font-sans">
                 {personalInfo.bio}
               </p>
-              <p className="text-[#9db2d4] text-sm leading-relaxed">
-                Saya meyakini bahwa kemampuan koding teknis harus diimbangi dengan komunikasi yang jelas, kemampuan bekerja sama dalam tim, dan pemahaman kebutuhan pengguna yang sesungguhnya.
-              </p>
+              
+              {/* Engineering Manifesto Quote */}
+              <div className="p-4 rounded-xl bg-[#162544]/70 border border-[#1e355b] flex items-start gap-3">
+                <span className="text-2xl text-[#d4a359] font-heading leading-none select-none">&ldquo;</span>
+                <p className="text-xs sm:text-sm text-[#f5f0e6]/95 italic leading-relaxed">
+                  Antarmuka yang unggul bukan dibangun dari animasi berlebihan, melainkan dari struktur kode yang modular, hierarki visual yang intuitif, dan pengalaman pengguna yang cepat tanpa hambatan.
+                </p>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-[#1e355b] text-xs font-mono text-[#9db2d4]">
@@ -62,30 +73,31 @@ export default function About() {
             </div>
           </div>
 
-          {/* Quick Facts Card */}
-          <div className="lg:col-span-4 p-6 sm:p-8 rounded-2xl bg-[#0f1a30] border border-[#1e355b] flex flex-col justify-between space-y-4 shadow-lg">
+          {/* Quick Facts Card with Blueprint Crosshair */}
+          <div className="blueprint-crosshair lg:col-span-4 p-6 sm:p-8 rounded-2xl bg-[#0f1a30] border border-[#1e355b] flex flex-col justify-between space-y-4 shadow-lg">
             <div className="space-y-3">
-              <span className="text-xs font-mono text-[#6780a4] uppercase tracking-wider">
-                Prinsip Bekerja
+              <span className="text-xs font-mono text-[#6780a4] uppercase tracking-wider block">
+                Prinsip Rekayasa
               </span>
-              <ul className="space-y-2.5 text-xs sm:text-sm text-[#f5f0e6]/90">
+              <ul className="space-y-3 text-xs sm:text-sm text-[#f5f0e6]/90">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="w-4 h-4 text-[#38a98c] shrink-0 mt-0.5" />
-                  <span><strong>Clean & Reusable:</strong> Struktur kode modular dan mudah dirawat.</span>
+                  <span><strong>Clean & Reusable:</strong> Pola penulisan komponen modular berstandar industri.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="w-4 h-4 text-[#38a98c] shrink-0 mt-0.5" />
-                  <span><strong>Responsif & Aksesibel:</strong> Tampilan konsisten di segala ukuran layar.</span>
+                  <span><strong>Ergonomi Responsif:</strong> Target ketuk nyaman (44-48px) dan adaptif di semua layar.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="w-4 h-4 text-[#38a98c] shrink-0 mt-0.5" />
-                  <span><strong>Team-Oriented:</strong> Pengalaman nyata berkoordinasi dalam event besar.</span>
+                  <span><strong>Kolaborasi Teruji:</strong> Berpengalaman mengelola ritme operasional event besar kampus.</span>
                 </li>
               </ul>
             </div>
 
-            <div className="p-3 rounded-xl bg-[#3178c6]/15 border border-[#3178c6]/30 text-xs text-[#8ec0f9]">
-              Siap berkontribusi dalam posisi magang atau proyek web modern.
+            <div className="p-3 rounded-xl bg-[#3178c6]/15 border border-[#3178c6]/30 text-xs text-[#8ec0f9] font-mono flex items-center justify-between">
+              <span>STATUS: TERSEDIA</span>
+              <span className="w-2 h-2 rounded-full bg-[#38a98c] animate-rhythmic-pulse"></span>
             </div>
           </div>
 
@@ -98,27 +110,41 @@ export default function About() {
               Riwayat Pendidikan & Aktivitas
             </h3>
 
-            {/* Tab Switcher: Full width grid on 360px mobile */}
-            <div className="w-full sm:w-auto grid grid-cols-2 p-1 rounded-xl bg-[#0f1a30] border border-[#1e355b]">
+            {/* Tab Switcher: Fluid Sliding Pill */}
+            <div className="w-full sm:w-auto grid grid-cols-2 p-1 rounded-xl bg-[#0a1222] border border-[#1e355b] relative">
               <button
                 onClick={() => setActiveTab('education')}
-                className={`min-h-[40px] px-3 sm:px-4 py-2 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-1.5 sm:gap-2 ${
+                className={`relative min-h-[40px] px-3 sm:px-5 py-2 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer z-10 ${
                   activeTab === 'education'
-                    ? 'bg-[#3178c6] text-white font-semibold shadow-sm border border-[#4b92e6]/30'
+                    ? 'text-white font-semibold'
                     : 'text-[#9db2d4] hover:text-[#f5f0e6]'
                 }`}
               >
+                {activeTab === 'education' && (
+                  <motion.div
+                    layoutId="aboutTabPill"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    className="absolute inset-0 bg-[#3178c6] rounded-lg -z-10 shadow-sm border border-[#4b92e6]/30"
+                  />
+                )}
                 <GraduationCap className="w-4 h-4 shrink-0" />
                 <span>Pendidikan</span>
               </button>
               <button
                 onClick={() => setActiveTab('experience')}
-                className={`min-h-[40px] px-3 sm:px-4 py-2 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-1.5 sm:gap-2 ${
+                className={`relative min-h-[40px] px-3 sm:px-5 py-2 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer z-10 ${
                   activeTab === 'experience'
-                    ? 'bg-[#3178c6] text-white font-semibold shadow-sm border border-[#4b92e6]/30'
+                    ? 'text-white font-semibold'
                     : 'text-[#9db2d4] hover:text-[#f5f0e6]'
                 }`}
               >
+                {activeTab === 'experience' && (
+                  <motion.div
+                    layoutId="aboutTabPill"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    className="absolute inset-0 bg-[#3178c6] rounded-lg -z-10 shadow-sm border border-[#4b92e6]/30"
+                  />
+                )}
                 <Briefcase className="w-4 h-4 shrink-0" />
                 <span>Kepanitiaan</span>
               </button>
