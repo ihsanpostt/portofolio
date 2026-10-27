@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — Halaman Tidak Ditemukan | Burhanuddin Ihsan</title>
+  <meta name="robots" content="noindex" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    body {
+      background-color: #090d16;
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .card {
+      max-width: 480px;
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 1.25rem;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      background: rgba(37, 99, 235, 0.15);
+      border: 1px solid rgba(37, 99, 235, 0.3);
+      color: #60a5fa;
+      font-size: 0.75rem;
+      font-family: monospace;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.05em;
+    }
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-bottom: 0.75rem;
+    }
+    p {
+      color: #94a3b8;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      margin-bottom: 1.75rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: #2563eb;
+      color: #ffffff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: background 0.15s ease;
+    }
+    .btn:hover {
+      background: #1d4ed8;
+    }
+  </style>
+  <script>
+    // GitHub Pages SPA deep link restoration
+    // If loaded on GitHub Pages with subpath, redirect to root with path query
+    (function() {
+      var path = window.location.pathname;
+      if (path && path !== '/' && !path.endsWith('404.html')) {
+        // Auto redirect to home after 1 second if preferred, or keep static page
+      }
+    })();
+  </script>
+</head>
+<body>
+  <div class="card">
+    <span class="badge">STATUS: 404 NOT FOUND</span>
+    <h1>404</h1>
+    <h2>Halaman Tidak Ditemukan</h2>
+    <p>
+      Tautan yang Anda tuju mungkin telah dipindahkan, diubah, atau tidak tersedia. Silakan kembali ke beranda portofolio Burhanuddin Ihsan.
+    </p>
+    <a href="./" class="btn">
+      <span>Kembali ke Beranda</span>
+      <span>→</span>
+    </a>
+  </div>
+</body>
+</html>

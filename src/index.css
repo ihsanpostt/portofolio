@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Vintage Blue Palette — Cyanotype / Heritage Indigo */
+  --color-primary: #3178c6;
+  --color-primary-hover: #2664a7;
+  --color-primary-subtle: rgba(49, 120, 198, 0.12);
+
+  /* Vintage Brass / Wax Seal Gold Accent */
+  --color-accent: #d4a359;
+  --color-accent-subtle: rgba(212, 163, 89, 0.12);
+
+  /* Patina / Verdigris Green */
+  --color-patina: #38a98c;
+
+  /* Surfaces & Ink Lines */
+  --bg-page: #0a1222;
+  --bg-surface: #0f1a30;
+  --bg-surface-elevated: #162544;
+  --border-subtle: #1e355b;
+  --border-hover: #2c4d82;
+  --text-primary: #f5f0e6;
+  --text-secondary: #9db2d4;
+  --text-muted: #6780a4;
+}
+
+@layer base {
+  * {
+    border-color: var(--border-subtle);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', Georgia, Cambria, 'Times New Roman', serif;
+    letter-spacing: -0.015em;
+  }
+}
+
+/* Minimalist Blueprint Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-page);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e355b;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2c4d82;
+}
+
+/* Clean Professional Surface Utilities */
+.surface-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 1rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.surface-card-hover:hover {
+  background-color: var(--bg-surface-elevated);
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+/* Accessible Focus States */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Vintage Blueprint / Cyanotype Architectural Grid */
+.bg-grid {
+  background-size: 36px 36px;
+  background-image: 
+    linear-gradient(to right, rgba(49, 120, 198, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(49, 120, 198, 0.045) 1px, transparent 1px);
+}
+
+/* Ensure smooth section navigation with fixed navbar */
+section[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+/* Dedicated Print Stylesheet for CV */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 1.2cm;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  header, footer, nav, #hero, #about, #portfolio, #contact, .no-print, [aria-hidden="true"] {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  #cv-printable-area {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    overflow: visible !important;
+  }
+}
+
+/* Vintage Cyanotype Interactive Accents */
+.card-premium {
+  background: #0f1a30;
+  border: 1px solid #1e355b;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-premium:hover {
+  border-color: #3b82d6;
+  box-shadow: 0 14px 30px -10px rgba(5, 12, 26, 0.7);
+  transform: translateY(-2px);
+}

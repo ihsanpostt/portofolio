@@ -1,0 +1,5 @@
+# Robots.txt for Burhanuddin Ihsan Portfolio
+User-agent: *
+Allow: /
+
+Sitemap: https://burhanuddinihsan.my.id/sitemap.xml
