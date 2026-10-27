@@ -27,18 +27,18 @@ export default function Footer() {
               <span className="font-heading font-bold text-[#f5f0e6] text-sm">
                 {personalInfo.name}
               </span>
-              <span className="text-[#1e355b]">•</span>
-              <span className="text-xs font-mono text-[#4b92e6]">
+              <span className="text-[#3b82f6]">•</span>
+              <span className="text-xs text-[#60a5fa] font-medium">
                 POLINEMA Malang
               </span>
             </div>
-            <p className="text-xs text-[#9db2d4] font-mono">
+            <p className="text-xs text-[#cbd5e1]">
               © {CURRENT_YEAR} {personalInfo.name}. D4 Teknik Informatika.
             </p>
           </div>
 
           {/* Navigation Quicklinks */}
-          <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-3 text-xs font-medium text-[#9db2d4]">
+          <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-3 text-xs font-medium text-[#cbd5e1]">
             <button
               onClick={() => scrollTo('hero')}
               className="hover:text-[#f5f0e6] transition-colors py-2 px-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] rounded-lg cursor-pointer"
@@ -68,7 +68,7 @@ export default function Footer() {
           {/* Back to Top */}
           <button
             onClick={scrollToTop}
-            className="min-h-[44px] min-w-[44px] p-2.5 rounded-xl bg-[#0f1a30] hover:bg-[#162544] text-[#9db2d4] hover:text-[#f5f0e6] border border-[#1e355b] hover:border-[#4b92e6]/50 transition-all flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] cursor-pointer shadow-sm"
+            className="min-h-[44px] min-w-[44px] p-2.5 rounded-xl bg-[#0f1a30] hover:bg-[#162544] text-[#cbd5e1] hover:text-[#f5f0e6] border border-[#1e355b] hover:border-[#4b92e6]/50 transition-all flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] cursor-pointer shadow-sm"
             aria-label="Kembali ke atas halaman"
             title="Kembali ke atas"
           >
@@ -77,14 +77,14 @@ export default function Footer() {
 
         </div>
 
-        {/* Architectural Blueprint Colophon */}
-        <div className="pt-6 border-t border-[#1e355b]/40 flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] font-mono text-[#6780a4]">
+        {/* Clean, Readable Bottom Notice */}
+        <div className="pt-6 border-t border-[#1e355b]/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#cbd5e1]">
           <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#38a98c]"></span>
-            <span>SPEC: REACT 19 • TAILWIND • ARCHITECTURAL VINTAGE BLUE</span>
+            <span className="w-2 h-2 rounded-full bg-[#38a98c]"></span>
+            <span>Dirancang & Dikembangkan Mandiri • D4 Teknik Informatika POLINEMA</span>
           </div>
           <div>
-            <span>LAT: 07°56&apos;S • LNG: 112°37&apos;E • MALANG, ID</span>
+            <span>Malang, Jawa Timur, Indonesia</span>
           </div>
         </div>
 

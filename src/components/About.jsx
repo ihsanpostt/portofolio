@@ -16,58 +16,52 @@ export default function About() {
     <section id="about" className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-[#1e355b]/70">
       <div className="max-w-6xl mx-auto space-y-16">
 
-        {/* Section Header with Architectural Section Numbering */}
+        {/* Section Header */}
         <div className="space-y-3 max-w-2xl text-left">
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono text-[#38a98c] px-2 py-0.5 rounded bg-[#38a98c]/10 border border-[#38a98c]/30">01</span>
-            <span className="text-xs font-mono font-medium text-[#4b92e6] uppercase tracking-widest">
-              Dokumen Profil & Filosofi Rekayasa
-            </span>
-          </div>
+          <span className="text-xs font-medium text-[#4b92e6] uppercase tracking-wider block">
+            Profil & Filosofi
+          </span>
           <h2 className="text-2xl sm:text-4xl font-bold text-[#f5f0e6] font-heading tracking-tight">
-            Latar Belakang & Pengalaman Nyata
+            Latar Belakang & Pengalaman
           </h2>
-          <p className="text-[#9db2d4] text-sm sm:text-base leading-relaxed">
-            Menghubungkan teori ilmu komputer di POLINEMA, disiplin arsitektur kode modular, dan rekam jejak kepanitiaan berskala ratusan peserta.
+          <p className="text-[#cbd5e1] text-sm sm:text-base leading-relaxed">
+            Menghubungkan studi ilmu komputer di POLINEMA, arsitektur kode antarmuka web modern, dan pengalaman kepanitiaan nyata di lapangan.
           </p>
         </div>
 
         {/* Overview Bio Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
           
-          {/* Main Bio Card with Blueprint Crosshair */}
-          <div className="blueprint-crosshair lg:col-span-8 p-6 sm:p-8 rounded-2xl bg-[#0f1a30] border border-[#1e355b] space-y-5 flex flex-col justify-between shadow-lg">
+          {/* Main Bio Card */}
+          <div className="lg:col-span-8 p-6 sm:p-8 rounded-2xl bg-[#0f1a30] border border-[#1e355b] space-y-5 flex flex-col justify-between shadow-lg">
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-mono text-[#6780a4] uppercase tracking-wider">
-                  Ikhtisar Personal
-                </span>
-                <span className="text-[10px] font-mono text-[#4b92e6]">DOKUMEN: BIO-01</span>
-              </div>
-              <p className="text-[#f5f0e6] text-sm sm:text-base leading-relaxed font-sans">
+              <span className="text-xs text-[#cbd5e1] uppercase tracking-wider font-medium block">
+                Ikhtisar Profil
+              </span>
+              <p className="text-[#f5f0e6] text-sm sm:text-base leading-relaxed">
                 {personalInfo.bio}
               </p>
               
-              {/* Engineering Manifesto Quote */}
-              <div className="p-4 rounded-xl bg-[#162544]/70 border border-[#1e355b] flex items-start gap-3">
+              {/* Philosophy Quote */}
+              <div className="p-4 rounded-xl bg-[#162544]/80 border border-[#1e355b] flex items-start gap-3">
                 <span className="text-2xl text-[#d4a359] font-heading leading-none select-none">&ldquo;</span>
-                <p className="text-xs sm:text-sm text-[#f5f0e6]/95 italic leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#f5f0e6] italic leading-relaxed">
                   Antarmuka yang unggul bukan dibangun dari animasi berlebihan, melainkan dari struktur kode yang modular, hierarki visual yang intuitif, dan pengalaman pengguna yang cepat tanpa hambatan.
                 </p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-[#1e355b] text-xs font-mono text-[#9db2d4]">
-              <div className="p-3 rounded-xl bg-[#162544] border border-[#1e355b]/70">
-                <span className="text-[#6780a4] block text-[11px] mb-1">Status Akademis</span>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-[#1e355b] text-xs text-[#cbd5e1]">
+              <div className="p-3 rounded-xl bg-[#162544] border border-[#1e355b]/80">
+                <span className="text-[#94a3b8] block text-[11px] mb-1">Status Akademis</span>
                 <span className="text-[#f5f0e6] font-semibold">D4 Teknik Informatika</span>
               </div>
-              <div className="p-3 rounded-xl bg-[#162544] border border-[#1e355b]/70">
-                <span className="text-[#6780a4] block text-[11px] mb-1">Fokus Utama</span>
+              <div className="p-3 rounded-xl bg-[#162544] border border-[#1e355b]/80">
+                <span className="text-[#94a3b8] block text-[11px] mb-1">Fokus Utama</span>
                 <span className="text-[#f5f0e6] font-semibold">Frontend Web & React</span>
               </div>
-              <div className="p-3 rounded-xl bg-[#162544] border border-[#1e355b]/70">
-                <span className="text-[#6780a4] block text-[11px] mb-1">Domisili</span>
+              <div className="p-3 rounded-xl bg-[#162544] border border-[#1e355b]/80">
+                <span className="text-[#94a3b8] block text-[11px] mb-1">Domisili</span>
                 <span className="text-[#f5f0e6] font-semibold">Malang & Blitar, ID</span>
               </div>
             </div>

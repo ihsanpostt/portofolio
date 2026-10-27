@@ -60,18 +60,15 @@ export default function Portfolio() {
     <section id="portfolio" className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-[#1e355b]/70">
       <div className="max-w-6xl mx-auto space-y-12">
 
-        {/* Section Header with Architectural Section Numbering */}
+        {/* Section Header */}
         <div className="space-y-3 max-w-2xl text-left">
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono text-[#38a98c] px-2 py-0.5 rounded bg-[#38a98c]/10 border border-[#38a98c]/30">02</span>
-            <span className="text-xs font-mono font-medium text-[#4b92e6] uppercase tracking-widest">
-              Katalog Proyek & Kualifikasi Terverifikasi
-            </span>
-          </div>
+          <span className="text-xs font-medium text-[#4b92e6] uppercase tracking-wider block">
+            Karya & Kualifikasi
+          </span>
           <h2 className="text-2xl sm:text-4xl font-bold text-[#f5f0e6] font-heading tracking-tight">
-            Karya Rekayasa & Keahlian Teknis
+            Portofolio & Kemampuan
           </h2>
-          <p className="text-[#9db2d4] text-sm sm:text-base leading-relaxed">
+          <p className="text-[#cbd5e1] text-sm sm:text-base leading-relaxed">
             Daftar aplikasi web yang pernah saya rancang, sertifikat resmi kepanitiaan di POLINEMA, serta susunan teknologi yang saya gunakan.
           </p>
         </div>
@@ -83,7 +80,7 @@ export default function Portfolio() {
             className={`relative min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer z-10 ${
               activeTab === 'projects'
                 ? 'text-white'
-                : 'text-[#9db2d4] hover:text-[#f5f0e6]'
+                : 'text-[#cbd5e1] hover:text-[#f5f0e6]'
             }`}
           >
             {activeTab === 'projects' && (
@@ -102,7 +99,7 @@ export default function Portfolio() {
             className={`relative min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer z-10 ${
               activeTab === 'certificates'
                 ? 'text-white'
-                : 'text-[#9db2d4] hover:text-[#f5f0e6]'
+                : 'text-[#cbd5e1] hover:text-[#f5f0e6]'
             }`}
           >
             {activeTab === 'certificates' && (
@@ -121,7 +118,7 @@ export default function Portfolio() {
             className={`relative min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer z-10 ${
               activeTab === 'tech'
                 ? 'text-white'
-                : 'text-[#9db2d4] hover:text-[#f5f0e6]'
+                : 'text-[#cbd5e1] hover:text-[#f5f0e6]'
             }`}
           >
             {activeTab === 'tech' && (

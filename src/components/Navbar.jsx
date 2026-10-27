@@ -66,28 +66,34 @@ export default function Navbar() {
             : 'bg-[#0f1a30]/75 border-[#1e355b]/70'
         }`}
       >
-        {/* Monogram / Brand */}
+        {/* Brand with User Portrait */}
         <button
           onClick={() => scrollTo('hero')}
-          className="flex items-center gap-2.5 text-left group min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] rounded-lg px-1.5"
+          className="flex items-center gap-3 text-left group min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] rounded-xl px-1.5"
           aria-label="Kembali ke atas"
         >
-          <div className="w-8 h-8 rounded-lg bg-[#3178c6] text-white flex items-center justify-center font-heading font-bold text-sm tracking-tight shadow-sm border border-[#4b92e6]/30">
-            BI
+          <div className="relative w-9 h-9 rounded-full overflow-hidden border border-[#4b92e6]/50 shadow-sm shrink-0 bg-[#162544] ring-2 ring-[#3178c6]/20">
+            <img
+              src={personalInfo.avatarUrl}
+              alt={personalInfo.name}
+              width="36"
+              height="36"
+              className="w-full h-full object-cover object-[center_35%]"
+            />
           </div>
-          <div className="hidden sm:block">
-            <span className="font-heading font-bold text-sm text-[#f5f0e6] tracking-tight group-hover:text-[#4b92e6] transition-colors">
+          <div className="hidden sm:block text-left">
+            <span className="font-heading font-bold text-sm text-[#f5f0e6] tracking-tight group-hover:text-[#4b92e6] transition-colors block leading-tight">
               {personalInfo.name}
             </span>
-            <span className="block text-[11px] font-mono text-[#9db2d4] leading-none">
-              Junior Developer
+            <span className="text-[11px] text-[#cbd5e1] leading-none block pt-0.5">
+              Teknik Informatika POLINEMA
             </span>
           </div>
         </button>
 
-        {/* Desktop Links with Sliding Active Pill */}
-        <div className="hidden md:flex items-center gap-1 bg-[#0a1222]/80 p-1.5 rounded-xl border border-[#1e355b]/80 relative">
-          {navItems.map((item, index) => {
+        {/* Desktop Links with Sliding Active Pill (No Numbers) */}
+        <div className="hidden md:flex items-center gap-1 bg-[#0a1222]/85 p-1.5 rounded-xl border border-[#1e355b]/80 relative">
+          {navItems.map((item) => {
             const isActive = activeSection === item.id;
             return (
               <button
@@ -97,7 +103,7 @@ export default function Navbar() {
                 className={`relative min-h-[38px] px-4 py-1.5 rounded-lg text-xs font-medium transition-colors duration-200 z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] cursor-pointer ${
                   isActive
                     ? 'text-[#f5f0e6] font-semibold'
-                    : 'text-[#9db2d4] hover:text-[#f5f0e6]'
+                    : 'text-[#cbd5e1] hover:text-[#f5f0e6]'
                 }`}
               >
                 {isActive && (
@@ -107,7 +113,6 @@ export default function Navbar() {
                     className="absolute inset-0 bg-[#162544] border border-[#2c4d82] rounded-lg -z-10 shadow-sm"
                   />
                 )}
-                <span className="font-mono text-[10px] text-[#4b92e6] mr-1.5 opacity-80">0{index + 1}.</span>
                 <span>{item.label}</span>
               </button>
             );
@@ -127,7 +132,7 @@ export default function Navbar() {
           {/* Hamburger button for mobile */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-[#9db2d4] hover:text-white bg-[#162544]/70 hover:bg-[#162544] border border-[#1e355b] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] cursor-pointer"
+            className="md:hidden min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-[#cbd5e1] hover:text-white bg-[#162544]/80 hover:bg-[#162544] border border-[#1e355b] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] cursor-pointer"
             aria-label={mobileMenuOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi'}
             aria-expanded={mobileMenuOpen}
           >
@@ -154,10 +159,7 @@ export default function Navbar() {
               transition={{ duration: 0.15 }}
               className="pointer-events-auto absolute top-20 left-4 right-4 z-50 max-w-md mx-auto bg-[#0f1a30] border border-[#1e355b] rounded-2xl p-3 shadow-2xl space-y-1 md:hidden"
             >
-              <div className="px-3 py-1.5 text-[10px] font-mono text-[#6780a4] uppercase tracking-widest border-b border-[#1e355b]/60 mb-1">
-                Navigasi Dokumen
-              </div>
-              {navItems.map((item, index) => (
+              {navItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => scrollTo(item.id)}
@@ -165,11 +167,10 @@ export default function Navbar() {
                   className={`w-full min-h-[44px] text-left px-4 py-2.5 rounded-xl text-sm font-medium transition-colors flex items-center justify-between ${
                     activeSection === item.id
                       ? 'bg-[#162544] text-[#f5f0e6] font-semibold border border-[#2c4d82]'
-                      : 'text-[#9db2d4] hover:bg-white/5 hover:text-white'
+                      : 'text-[#cbd5e1] hover:bg-white/5 hover:text-white'
                   }`}
                 >
                   <span>{item.label}</span>
-                  <span className="font-mono text-xs text-[#4b92e6]">0{index + 1}</span>
                 </button>
               ))}
               <div className="pt-2 border-t border-[#1e355b]">

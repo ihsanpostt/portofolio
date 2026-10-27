@@ -214,14 +214,14 @@ export default function Contact() {
 
         {/* Section Header */}
         <div className="space-y-3 max-w-2xl text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0f1a30] border border-[#1e355b] text-xs font-mono text-[#4b92e6]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#38a98c]"></span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0f1a30] border border-[#2c4d82] text-xs text-[#38a98c] font-medium shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-[#38a98c] animate-rhythmic-pulse"></span>
             <span>Respon Cepat: Rata-rata &lt; 12 Jam</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-bold text-[#f5f0e6] font-heading tracking-tight">
             Mari Terhubung & Berdiskusi
           </h2>
-          <p className="text-[#9db2d4] text-sm sm:text-base leading-relaxed">
+          <p className="text-[#cbd5e1] text-sm sm:text-base leading-relaxed">
             Terbuka untuk peluang magang, proyek lepas (freelance), kerja sama kampus, atau sekadar bertukar wawasan seputar arsitektur web modern.
           </p>
         </div>
@@ -234,7 +234,7 @@ export default function Contact() {
 
             {/* Email Card with Copy Feature */}
             <div className="p-6 rounded-2xl bg-[#0f1a30] border border-[#1e355b] space-y-3 shadow-lg">
-              <span className="text-xs font-mono text-[#9db2d4] uppercase tracking-wider block">
+              <span className="text-xs text-[#cbd5e1] uppercase tracking-wider block font-medium">
                 Surel / Email Resmi
               </span>
               <div className="text-base font-semibold text-[#f5f0e6] break-all">
@@ -253,7 +253,7 @@ export default function Contact() {
                     </>
                   ) : (
                     <>
-                      <Copy className="w-3.5 h-3.5 text-[#9db2d4]" />
+                      <Copy className="w-3.5 h-3.5 text-[#cbd5e1]" />
                       <span>Salin Alamat Email</span>
                     </>
                   )}
@@ -279,16 +279,16 @@ export default function Contact() {
               className="p-6 rounded-2xl bg-[#0f1a30] border border-[#1e355b] hover:border-[#38a98c]/50 transition-colors block group space-y-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] shadow-lg"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono text-[#9db2d4] uppercase tracking-wider">
+                <span className="text-xs text-[#cbd5e1] uppercase tracking-wider font-medium">
                   WhatsApp Direct
                 </span>
-                <ArrowUpRight className="w-4 h-4 text-[#9db2d4] group-hover:text-[#f5f0e6] transition-colors" />
+                <ArrowUpRight className="w-4 h-4 text-[#cbd5e1] group-hover:text-[#f5f0e6] transition-colors" />
               </div>
               <div className="text-base font-semibold text-[#f5f0e6] group-hover:text-[#38a98c] transition-colors flex items-center gap-2">
                 <MessageCircle className="w-4 h-4 text-[#38a98c]" />
                 <span>{personalInfo.phone}</span>
               </div>
-              <p className="text-xs text-[#9db2d4]">
+              <p className="text-xs text-[#cbd5e1]">
                 Pesan terenkripsi langsung untuk diskusi mendesak atau respon seketika.
               </p>
             </a>
