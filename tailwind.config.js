@@ -4,38 +4,37 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class',
   theme: {
     extend: {
       colors: {
         brand: {
-          DEFAULT: '#2563eb', // Primary Blue
-          hover: '#1d4ed8',
-          subtle: 'rgba(37, 99, 235, 0.1)',
+          DEFAULT: '#0284c7', // Sky-600
+          hover: '#0369a1',
+          subtle: 'rgba(2, 132, 199, 0.08)',
         },
         accent: {
-          DEFAULT: '#10b981', // Emerald Mint Accent
-          hover: '#059669',
-          subtle: 'rgba(16, 185, 129, 0.1)',
+          DEFAULT: '#0d9488', // Teal-600
+          hover: '#0f766e',
+          subtle: 'rgba(13, 148, 136, 0.08)',
         },
-        surface: {
-          page: '#090d16',       // Deep obsidian dark page background
-          DEFAULT: '#0f172a',    // Card / Section surface
-          elevated: '#151f32',   // Elevated card or hover
-          muted: '#1e293b',
-          border: '#1e293b',     // Crisp subtle borders
-          borderHover: '#334155',
+        canvas: {
+          bg: '#f8fafc',
+          card: '#ffffff',
+          border: '#e2e8f0',
+          dark: '#0f172a',
         }
       },
       fontFamily: {
         sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
         heading: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
-        serif: ['"Playfair Display"', 'Georgia', 'Cambria', 'serif'],
-        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+        handwriting: ['"Caveat"', 'cursive', 'sans-serif'],
       },
       boxShadow: {
-        'card': '0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3)',
-        'card-hover': '0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4)',
+        'subtle': '0 1px 2px 0 rgba(0, 0, 0, 0.04)',
+        'card': '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)',
+        'card-hover': '0 12px 24px -6px rgba(15, 23, 42, 0.08), 0 4px 8px -4px rgba(15, 23, 42, 0.04)',
+        'polaroid': '0 20px 35px -10px rgba(15, 23, 42, 0.12), 0 8px 16px -6px rgba(15, 23, 42, 0.06)',
       },
       transitionTimingFunction: {
         'smooth': 'cubic-bezier(0.16, 1, 0.3, 1)',

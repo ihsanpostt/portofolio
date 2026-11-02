@@ -1,253 +1,192 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { 
-  ArrowRight, 
-  FileText, 
-  MapPin, 
-  FolderGit2, 
-  GitBranch, 
-  GraduationCap, 
-  Code2, 
-  Mail 
-} from 'lucide-react';
-import { Github, Linkedin, Instagram } from './Icons';
-import { personalInfo, statsData } from '../data/portfolioData';
-import CvModal from './CvModal';
+import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
+import { ArrowRight, Send } from 'lucide-react';
+import { personalInfo } from '../data/portofolioData';
 
-const iconMap = {
-  FolderGit2: FolderGit2,
-  GitBranch: GitBranch,
-  GraduationCap: GraduationCap,
-  Code2: Code2
-};
+// Lazy load Lanyard for performance
+const Lanyard = lazy(() => import('./Lanyard'));
 
-export default function Hero() {
-  const [cvModalOpen, setCvModalOpen] = useState(false);
+const ROLES = personalInfo.roles || [
+  "3D Creative Developer",
+  "React & Three.js Enthusiast",
+  "Junior Developer",
+  "Web Development"
+];
 
-  const scrollTo = (id) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
+function GithubIcon({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+    </svg>
+  );
+}
 
-  const handleStatClick = (id) => {
-    if (id === 'stats-projects') {
-      window.dispatchEvent(new CustomEvent('switchPortfolioTab', { detail: 'projects' }));
-      scrollTo('portfolio');
-    } else if (id === 'stats-focus') {
-      window.dispatchEvent(new CustomEvent('switchPortfolioTab', { detail: 'tech' }));
-      scrollTo('portfolio');
-    } else if (id === 'stats-commits') {
-      window.open(personalInfo.socials.github, '_blank', 'noreferrer');
-    } else if (id === 'stats-edu') {
-      scrollTo('about');
+function InstagramIcon({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+    </svg>
+  );
+}
+
+function LinkedinIcon({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+    </svg>
+  );
+}
+
+export default function Hero({ lanyardIntroStarted = true }) {
+  const [typedText, setTypedText] = useState('');
+  const [isTyping, setIsTyping] = useState(true);
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.matchMedia('(max-width: 767px)').matches);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const handleType = useCallback(() => {
+    const currentRole = ROLES[roleIndex];
+    if (isTyping) {
+      if (charIndex < currentRole.length) {
+        setTypedText(prev => prev + currentRole[charIndex]);
+        setCharIndex(prev => prev + 1);
+      } else {
+        setTimeout(() => setIsTyping(false), 2000);
+      }
+    } else {
+      if (charIndex > 0) {
+        setTypedText(prev => prev.slice(0, -1));
+        setCharIndex(prev => prev - 1);
+      } else {
+        setRoleIndex(prev => (prev + 1) % ROLES.length);
+        setIsTyping(true);
+      }
     }
-  };
+  }, [charIndex, isTyping, roleIndex]);
+
+  useEffect(() => {
+    const timer = setTimeout(handleType, isTyping ? 90 : 45);
+    return () => clearTimeout(timer);
+  }, [handleType, isTyping]);
 
   return (
-    <section id="hero" className="relative pt-32 pb-16 md:pt-40 md:pb-24 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto space-y-16">
-        
-        {/* Main Hero Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          
-          {/* Left Column: Headline, Bio, Actions */}
-          <motion.div 
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-7 space-y-6 text-left"
-          >
-            {/* Status Pill Badge with Direct Contact Shortcut */}
-            <div className="flex flex-wrap items-center gap-3">
-              <button
-                onClick={() => scrollTo('contact')}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0f1a30] hover:bg-[#162544] border border-[#2c4d82] hover:border-[#38a98c] text-xs font-medium text-[#f5f0e6] transition-colors cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] shadow-sm"
-                title="Klik untuk membuka formulir diskusi atau tawaran proyek"
-              >
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#38a98c] opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#38a98c]"></span>
-                </span>
-                <span className="text-[#38a98c] font-semibold">{personalInfo.status}</span>
-              </button>
+    <section className="hero-root-section" id="Home">
+      {/* 3D Lanyard Card hanging */}
+      <section className={`lanyard-card-container ${isMobile ? 'is-mobile' : ''}`} aria-label="Interactive 3D Lanyard">
+        <div className="lanyard-viewport">
+          <Suspense fallback={null}>
+            <Lanyard
+              frontImage="/assets/frontCard-ihsan.png"
+              backImage="/assets/backCard-ihsan.png"
+              strapImage="/assets/bandd-ihsan.png"
+              cardColor="#04010e09"
+              imagePadding={0.035}
+              strapColor="#111827"
+              finish="glossy"
+              anchor={isMobile ? 'center' : 'right'}
+              orientation="portrait"
+              size={0.62}
+              cornerRadius={0.25}
+              strapLength={0.59}
+              strapWidth={0.62}
+              gravity={1.2}
+              damping={0.35}
+              elasticity={0.7}
+              breeze={0.1}
+              interactive={true}
+              autoFlip={true}
+              metal="silver"
+              intro={lanyardIntroStarted}
+            />
+          </Suspense>
+        </div>
+      </section>
 
-              <span className="inline-flex items-center gap-1.5 text-xs text-[#cbd5e1]">
-                <span className="text-[#4b92e6]">•</span>
-                <span>Malang, Jawa Timur</span>
-              </span>
-            </div>
+      {/* Hero Text Column */}
+      <div className="hero-container-inner">
+        <div className="hero-text-col">
+          <div className="hero-status-pill">
+            <span className="hero-status-ping-wrap">
+              <span className="hero-status-ping" />
+              <span className="hero-status-dot" />
+            </span>
+            <span className="hero-status-text">Mahasiswa D4 TI POLINEMA &bull; Junior Web Developer</span>
+          </div>
 
-            {/* Main Headline (Clean, Human, Modern & Canggih) */}
-            <h1 className="text-3xl sm:text-5xl lg:text-[3.35rem] font-bold text-[#f8fafc] tracking-[-0.03em] leading-[1.14]">
-              Perancangan antarmuka web modern dengan arsitektur yang terstruktur dan presisi.
+          <div className="hero-heading-group">
+            <h1 className="hero-h1-primary">Selamat Datang di</h1>
+            <h1 className="hero-h1-accent">
+              <span className="hero-gradient-text">Portofolio</span> <span className="hero-white-text">Saya</span>
             </h1>
+          </div>
 
-            {/* Natural Human Subtitle */}
-            <p className="text-[#cbd5e1] text-sm sm:text-base leading-relaxed max-w-xl">
-              Halo, saya <strong className="text-[#f5f0e6] font-semibold">{personalInfo.name}</strong>. Mahasiswa D4 Teknik Informatika Politeknik Negeri Malang (POLINEMA) dan pengembang web junior yang berfokus pada ekosistem React, arsitektur antarmuka modern, dan penyelesaian solusi nyata.
-            </p>
+          <div className="hero-typewriter-row">
+            <span className="hero-typewriter-text">{typedText}</span>
+            <span className="hero-typewriter-cursor" />
+          </div>
 
-            {/* CTA Buttons: Responsive on 360px with full touch targets */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
-              <button
-                onClick={() => scrollTo('portfolio')}
-                className="w-full sm:w-auto min-h-[44px] px-6 py-2.5 rounded-xl font-medium text-sm text-white bg-[#3178c6] hover:bg-[#2664a7] transition-all duration-150 shadow-sm border border-[#4b92e6]/30 flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] cursor-pointer hover:shadow-md hover:shadow-[#3178c6]/20"
+          <p className="hero-description-copy">
+            {personalInfo.bio}
+          </p>
+
+          <div className="hero-action-row">
+            <a href="#Portofolio" className="hero-btn-primary">
+              <span>Lihat Proyek</span>
+              <ArrowRight size={16} />
+            </a>
+            <a href="#Contact" className="hero-btn-secondary">
+              <span>Hubungi Saya</span>
+              <Send size={15} />
+            </a>
+          </div>
+
+          <div className="hero-find-me-wrap">
+            <span className="hero-find-me-label">Terhubung</span>
+            <div className="hero-social-buttons">
+              <a
+                href={personalInfo.socials.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hero-social-icon-btn"
+                aria-label="Profil GitHub"
+                title="Profil GitHub"
               >
-                <span>Jelajahi Proyek</span>
-                <ArrowRight className="w-4 h-4 opacity-80" />
-              </button>
-
-              <button
-                onClick={() => setCvModalOpen(true)}
-                className="w-full sm:w-auto min-h-[44px] px-5 py-2.5 rounded-xl font-medium text-sm text-[#f5f0e6] bg-[#0f1a30] hover:bg-[#162544] border border-[#1e355b] hover:border-[#2c4d82] transition-colors duration-150 flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] cursor-pointer"
-                title="Buka pratinjau CV, cetak PDF, atau unduh ringkasan"
+                <GithubIcon size={18} />
+              </a>
+              <a
+                href={personalInfo.socials.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hero-social-icon-btn"
+                aria-label="Profil LinkedIn"
+                title="Profil LinkedIn"
               >
-                <FileText className="w-4 h-4 text-[#cbd5e1]" />
-                <span>Lihat & Unduh CV</span>
-              </button>
-
-              <button
-                onClick={() => scrollTo('contact')}
-                className="w-full sm:w-auto min-h-[44px] px-5 py-2.5 rounded-xl font-medium text-sm text-[#cbd5e1] hover:text-[#f5f0e6] bg-transparent hover:bg-white/5 border border-transparent hover:border-[#1e355b] transition-colors duration-150 flex items-center justify-center gap-2 cursor-pointer"
+                <LinkedinIcon size={18} />
+              </a>
+              <a
+                href={personalInfo.socials.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hero-social-icon-btn"
+                aria-label="Profil Instagram"
+                title="Profil Instagram"
               >
-                <Mail className="w-4 h-4 text-[#cbd5e1]" />
-                <span>Kontak</span>
-              </button>
+                <InstagramIcon size={18} />
+              </a>
             </div>
-
-            {/* Social Links Row */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-[#1e355b]/80">
-              <div className="flex items-center gap-3">
-                <span className="text-xs text-[#cbd5e1] font-medium">
-                  Saluran:
-                </span>
-                <div className="flex items-center gap-1.5">
-                  <a
-                    href={personalInfo.socials.github}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-2 min-h-[40px] min-w-[40px] flex items-center justify-center rounded-lg text-[#cbd5e1] hover:text-[#f5f0e6] hover:bg-[#162544] border border-[#1e355b] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6]"
-                    aria-label="Profil GitHub"
-                  >
-                    <Github className="w-4 h-4" />
-                  </a>
-                  <a
-                    href={personalInfo.socials.linkedin}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-2 min-h-[40px] min-w-[40px] flex items-center justify-center rounded-lg text-[#cbd5e1] hover:text-[#f5f0e6] hover:bg-[#162544] border border-[#1e355b] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6]"
-                    aria-label="Profil LinkedIn"
-                  >
-                    <Linkedin className="w-4 h-4" />
-                  </a>
-                  <a
-                    href={personalInfo.socials.instagram}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-2 min-h-[40px] min-w-[40px] flex items-center justify-center rounded-lg text-[#cbd5e1] hover:text-[#f5f0e6] hover:bg-[#162544] border border-[#1e355b] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6]"
-                    aria-label="Profil Instagram"
-                  >
-                    <Instagram className="w-4 h-4" />
-                  </a>
-                </div>
-              </div>
-
-              <div className="text-xs text-[#cbd5e1] font-medium">
-                POLINEMA • D4 Teknik Informatika
-              </div>
-            </div>
-
-          </motion.div>
-
-          {/* Right Column: Clean Professional Developer Portrait */}
-          <motion.div 
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-5 flex justify-center lg:justify-end"
-          >
-            <div className="w-full max-w-sm rounded-2xl bg-[#0f1a30] border border-[#1e355b] p-3 shadow-xl relative group">
-              {/* Photo Frame */}
-              <div className="relative aspect-[4/5] w-full rounded-xl overflow-hidden bg-[#0a1222] border border-[#1e355b]/60">
-                <img
-                  src={personalInfo.avatarUrl}
-                  alt={personalInfo.name}
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="async"
-                  width="400"
-                  height="500"
-                  className="w-full h-full object-cover object-[center_60%] group-hover:scale-[1.02] transition-transform duration-300"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0f1a30] via-transparent to-transparent opacity-60" />
-                
-                {/* Official Accredited Badge Overlay */}
-                <div className="absolute top-3 right-3 px-2.5 py-1 rounded-md bg-[#0a1222]/90 backdrop-blur-xs border border-[#38a98c]/40 text-xs text-[#38a98c] flex items-center gap-1.5 shadow-sm font-medium">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#38a98c] animate-rhythmic-pulse"></span>
-                  <span>POLINEMA D4 TI</span>
-                </div>
-              </div>
-
-              {/* Bottom Details Card */}
-              <div className="p-3 pt-4 space-y-2">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-base font-bold text-[#f5f0e6] font-heading">
-                      {personalInfo.name}
-                    </h2>
-                    <p className="text-xs text-[#cbd5e1]">
-                      Teknik Informatika POLINEMA
-                    </p>
-                  </div>
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#38a98c]/15 text-[#38a98c] text-xs font-medium border border-[#38a98c]/30">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#38a98c]"></span>
-                    Mahasiswa Aktif
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between pt-2 border-t border-[#1e355b] text-xs text-[#cbd5e1]">
-                  <div className="flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-[#4b92e6] shrink-0" />
-                    <span>{personalInfo.location}</span>
-                  </div>
-                  <span className="text-[#38a98c] font-medium">Terverifikasi</span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
+          </div>
         </div>
-
-        {/* Metrics Strip */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-5 sm:p-6 rounded-2xl bg-[#0f1a30] border border-[#1e355b] shadow-lg">
-          {statsData.map((stat, idx) => {
-            const Icon = iconMap[stat.icon] || Code2;
-            return (
-              <div 
-                key={stat.id}
-                onClick={() => handleStatClick(stat.id)}
-                className={`space-y-1.5 cursor-pointer group p-2.5 rounded-xl hover:bg-[#162544]/60 transition-all ${idx !== 0 ? 'md:border-l md:border-[#1e355b] md:pl-6' : ''}`}
-                title="Klik untuk melihat rincian terkait"
-              >
-                <div className="flex items-center gap-2 text-[#cbd5e1] mb-1 group-hover:text-[#4b92e6] transition-colors">
-                  <Icon className="w-4 h-4 text-[#4b92e6] group-hover:scale-110 transition-transform" />
-                  <span className="text-xs font-medium">{stat.label}</span>
-                </div>
-                <div className="text-2xl sm:text-3xl font-bold text-[#f5f0e6] font-heading tracking-tight group-hover:text-[#4b92e6] transition-colors">
-                  {stat.value}
-                </div>
-                <p className="text-xs text-[#cbd5e1]/90 leading-normal">
-                  {stat.subtext}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-
       </div>
-
-      {/* Interactive CV Modal with Print-to-PDF & Text Download */}
-      <CvModal isOpen={cvModalOpen} onClose={() => setCvModalOpen(false)} />
     </section>
   );
 }

@@ -1,573 +1,452 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
-import {
-  Send,
-  Copy,
-  Check,
-  ArrowUpRight,
-  MessageCircle,
-  Loader2,
-  AlertCircle,
-  Mail
-} from 'lucide-react';
-import { Github, Linkedin, Instagram } from './Icons';
-import { personalInfo } from '../data/portfolioData';
+import { User, Mail, MessageSquare, Send, Image as ImageIcon, Check, ExternalLink } from 'lucide-react';
+import { defaultComments, personalInfo } from '../data/portofolioData';
+import { useSound } from './SoundContext';
 
-// Ganti endpoint ini dengan VITE_FORMSPREE_ENDPOINT di file .env atau environment variable hosting
-const FORMSPREE_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT || 'https://formspree.io/f/mqkenvqo';
+function formatRelativeTime(dateString) {
+  const time = new Date(dateString).getTime();
+  if (!Number.isFinite(time)) return 'Waktu tidak diketahui';
+  const seconds = Math.max(0, Math.floor((Date.now() - time) / 1000));
+  if (seconds < 60) return 'Baru saja';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} menit lalu`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} jam lalu`;
+  return `${Math.floor(hours / 24)} hari lalu`;
+}
+
+function processImage(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const size = Math.min(img.naturalWidth, img.naturalHeight);
+        if (ctx) {
+          canvas.width = 128;
+          canvas.height = 128;
+          ctx.drawImage(
+            img,
+            (img.naturalWidth - size) / 2,
+            (img.naturalHeight - size) / 2,
+            size,
+            size,
+            0,
+            0,
+            128,
+            128
+          );
+          resolve(canvas.toDataURL('image/jpeg', 0.78));
+        } else {
+          reject(new Error('Canvas tidak tersedia'));
+        }
+      };
+      img.src = String(reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
+  const { playSfx } = useSound();
+
+  // Contact Message State
+  const [msgForm, setMsgForm] = useState({ name: '', email: '', message: '' });
+  const [sendingMsg, setSendingMsg] = useState(false);
+  const [msgSuccess, setMsgSuccess] = useState(false);
+  const [msgError, setMsgError] = useState('');
+
+  // Comments State
+  const [comments, setComments] = useState([]);
+  const [loadingComments, setLoadingComments] = useState(true);
+  const [submittingComment, setSubmittingComment] = useState(false);
+  const [commentForm, setCommentForm] = useState({
     name: '',
-    email: '',
-    subject: '',
-    message: ''
+    message: '',
+    photo: '',
+    photoName: ''
   });
+  const [commentError, setCommentError] = useState('');
 
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState('idle'); // 'idle' | 'success' | 'error'
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successChannel, setSuccessChannel] = useState('email'); // 'email' | 'whatsapp' | 'gmail'
-  const [copiedEmail, setCopiedEmail] = useState(false);
-
-  const validate = () => {
-    const newErrors = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = 'Nama lengkap wajib diisi.';
-    } else if (formData.name.trim().length < 2) {
-      newErrors.name = 'Nama minimal 2 karakter.';
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!formData.email.trim()) {
-      newErrors.email = 'Alamat email wajib diisi.';
-    } else if (!emailRegex.test(formData.email.trim())) {
-      newErrors.email = 'Format email tidak valid (contoh: nama@perusahaan.com).';
-    }
-
-    if (!formData.subject.trim()) {
-      newErrors.subject = 'Subjek atau keperluan wajib diisi.';
-    } else if (formData.subject.trim().length < 3) {
-      newErrors.subject = 'Subjek minimal 3 karakter.';
-    }
-
-    if (!formData.message.trim()) {
-      newErrors.message = 'Isi pesan wajib diisi.';
-    } else if (formData.message.trim().length < 10) {
-      newErrors.message = 'Pesan minimal 10 karakter agar maksud tersampaikan dengan jelas.';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }));
-    }
-    if (submitStatus === 'error') {
-      setSubmitStatus('idle');
-      setErrorMessage('');
-    }
-  };
-
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText(personalInfo.email);
-    setCopiedEmail(true);
-    setTimeout(() => setCopiedEmail(false), 2000);
-  };
-
-  // 1. Pengiriman Nyata via API Formspree (Email Langsung)
-  const handleEmailSubmit = async (e) => {
-    if (e) e.preventDefault();
-    if (!validate()) return;
-
-    setIsSubmitting(true);
-    setSubmitStatus('idle');
-    setErrorMessage('');
-
+  // Load comments from localStorage on mount
+  useEffect(() => {
     try {
-      const response = await fetch(FORMSPREE_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: formData.name.trim(),
-          email: formData.email.trim(),
-          subject: formData.subject.trim(),
-          message: formData.message.trim(),
-          _replyto: formData.email.trim()
-        })
-      });
-
-      if (response.ok) {
-        setSubmitStatus('success');
-        setSuccessChannel('email');
-        try {
-          confetti({
-            particleCount: 75,
-            spread: 60,
-            origin: { y: 0.6 }
-          });
-        } catch {
-          // fallback jika canvas tidak tersedia
+      const saved = localStorage.getItem('portfolio-contact-comments');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          // Filter out legacy dummy comments (c-1, c-2, c-3) to ensure only real comments from real users are kept
+          const realComments = parsed.filter(
+            (c) => c && typeof c === 'object' && !['c-1', 'c-2', 'c-3'].includes(c.id)
+          );
+          if (realComments.length !== parsed.length) {
+            localStorage.setItem('portfolio-contact-comments', JSON.stringify(realComments));
+          }
+          setComments(realComments);
+          setLoadingComments(false);
+          return;
         }
-      } else {
-        const data = await response.json().catch(() => ({}));
-        const message = data?.errors?.map((err) => err.message).join(', ') ||
-          'Pengiriman email langsung sedang mengalami kendala. Anda dapat langsung mengirim pesan ini via WhatsApp atau Gmail di bawah.';
-        setErrorMessage(message);
-        setSubmitStatus('error');
       }
     } catch {
-      setErrorMessage(
-        'Terjadi kendala koneksi internet saat mengirim. Gunakan opsi pengiriman langsung via WhatsApp atau Gmail agar pesan Anda tetap terkirim.'
-      );
-      setSubmitStatus('error');
-    } finally {
-      setIsSubmitting(false);
+      // Fallback
     }
-  };
+    setComments(defaultComments || []);
+    setLoadingComments(false);
+  }, []);
 
-  // 2. Pengiriman Nyata via WhatsApp (Pesan Instan Terformat)
-  const handleWhatsAppSubmit = (e) => {
-    if (e) e.preventDefault();
-    if (!validate()) return;
+  const handlePhotoSelect = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    const text = `Halo Kak ${personalInfo.name},\n\nPerkenalkan saya *${formData.name.trim()}* (${formData.email.trim()}).\n\n*Keperluan:* ${formData.subject.trim()}\n\n*Pesan:*\n${formData.message.trim()}`;
-    const cleanPhone = personalInfo.phone.replace(/[^0-9]/g, '');
-    const waUrl = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(text)}`;
+    if (!file.type.startsWith('image/')) {
+      setCommentError('Pilih file gambar yang valid.');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setCommentError('Ukuran foto maksimal 5 MB.');
+      e.target.value = '';
+      return;
+    }
 
-    window.open(waUrl, '_blank', 'noreferrer');
-
-    setSuccessChannel('whatsapp');
-    setSubmitStatus('success');
     try {
-      confetti({
-        particleCount: 75,
-        spread: 60,
-        origin: { y: 0.6 }
-      });
+      const dataUrl = await processImage(file);
+      setCommentForm((prev) => ({
+        ...prev,
+        photo: dataUrl,
+        photoName: file.name
+      }));
+      setCommentError('');
     } catch {
-      // fallback
+      setCommentError('Foto tidak dapat dibaca. Coba pilih gambar lain.');
     }
   };
 
-  // 3. Fallback Gmail
-  const handleGmailFallback = () => {
-    const subject = encodeURIComponent(formData.subject || `Pesan Portofolio - ${formData.name}`);
-    const body = encodeURIComponent(
-      `Halo ${personalInfo.name},\n\nNama: ${formData.name}\nEmail: ${formData.email}\n\nPesan:\n${formData.message}`
-    );
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${personalInfo.email}&su=${subject}&body=${body}`;
-    window.open(gmailUrl, '_blank', 'noreferrer');
-  };
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    setMsgError('');
+    setSendingMsg(true);
 
-  const resetForm = () => {
-    setSubmitStatus('idle');
-    setErrorMessage('');
-    setFormData({ name: '', email: '', subject: '', message: '' });
-    setErrors({});
-  };
-
-  const QUICK_TEMPLATES = [
-    {
-      label: '💼 Tawaran Magang / Kerja',
-      subject: 'Penawaran Magang / Posisi Frontend Developer',
-      message: 'Halo Ihsan, kami tertarik dengan portofolio Anda dan ingin mendiskusikan peluang magang atau posisi pengembang web di tim kami.'
-    },
-    {
-      label: '🚀 Diskusi Proyek Web',
-      subject: 'Konsultasi & Diskusi Proyek Pengembangan Web',
-      message: 'Halo Ihsan, saya memiliki kebutuhan pengembangan website/antarmuka web dan ingin berkonsultasi mengenai estimasi pengerjaan serta solusinya.'
-    },
-    {
-      label: '🤝 Kolaborasi Kampus / Teknis',
-      subject: 'Ajakan Kolaborasi Proyek & Riset Teknis',
-      message: 'Halo Ihsan, salam kenal sesama penggiat teknologi. Mari berdiskusi tentang peluang kolaborasi proyek atau eksplorasi teknologi web modern.'
-    },
-    {
-      label: '☕ Networking Santai',
-      subject: 'Networking & Berbagi Wawasan Seputar Web Dev',
-      message: 'Halo Ihsan, saya melihat proyek-proyek Anda di portofolio dan ingin terhubung untuk saling bertukar wawasan seputar ekosistem React dan teknologi.'
+    try {
+      // Simulates or posts to endpoint
+      await new Promise((r) => setTimeout(r, 600));
+      setMsgSuccess(true);
+      setMsgForm({ name: '', email: '', message: '' });
+      playSfx('success');
+      confetti({
+        particleCount: 50,
+        spread: 60,
+        origin: { y: 0.8 }
+      });
+      setTimeout(() => setMsgSuccess(false), 5000);
+    } catch {
+      setMsgError('Gagal mengirim pesan. Silakan coba lagi.');
+    } finally {
+      setSendingMsg(false);
     }
-  ];
+  };
 
-  const applyTemplate = (tpl) => {
-    setFormData((prev) => ({
-      ...prev,
-      subject: tpl.subject,
-      message: tpl.message
-    }));
-    setErrors((prev) => ({ ...prev, subject: '', message: '' }));
+  const handleSendComment = (e) => {
+    e.preventDefault();
+    setCommentError('');
+
+    const name = commentForm.name.trim();
+    const message = commentForm.message.trim();
+
+    if (!name || !message) {
+      setCommentError('Nama dan komentar wajib diisi.');
+      return;
+    }
+
+    setSubmittingComment(true);
+
+    setTimeout(() => {
+      const newComment = {
+        id: 'comment-' + Date.now(),
+        name,
+        message,
+        photo: commentForm.photo || null,
+        createdAt: new Date().toISOString()
+      };
+
+      const updated = [newComment, ...comments].slice(0, 50);
+      setComments(updated);
+      try {
+        localStorage.setItem('portfolio-contact-comments', JSON.stringify(updated));
+      } catch {
+        // Storage limit
+      }
+
+      setCommentForm({ name: '', message: '', photo: '', photoName: '' });
+      setSubmittingComment(false);
+      playSfx('success');
+
+      confetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { y: 0.85 }
+      });
+    }, 400);
   };
 
   return (
-    <section id="contact" className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-t border-[#1e355b]/80">
-      <div className="max-w-6xl mx-auto space-y-12">
+    <section className="contact-root-section" id="Contact" aria-labelledby="contact-section-heading">
+      <div className="contact-container-inner">
+        <h2 className="section-display-title" id="contact-section-heading">
+          Hubungi Saya
+        </h2>
 
-        {/* Section Header */}
-        <div className="space-y-3 max-w-2xl text-left">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0f1a30] border border-[#2c4d82] text-xs text-[#38a98c] font-medium shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-[#38a98c] animate-rhythmic-pulse"></span>
-            <span>Respon Cepat: Rata-rata &lt; 12 Jam</span>
-          </div>
-          <h2 className="text-2xl sm:text-4xl font-bold text-[#f5f0e6] font-heading tracking-tight">
-            Mari Terhubung & Berdiskusi
-          </h2>
-          <p className="text-[#cbd5e1] text-sm sm:text-base leading-relaxed">
-            Terbuka untuk peluang magang, proyek lepas (freelance), kerja sama kampus, atau sekadar bertukar wawasan seputar arsitektur web modern.
-          </p>
-        </div>
+        <div className="contact-main-grid contact-layout">
+          {/* Left Panel: Contact Message & FIND ME */}
+          <div className="contact-panel contact-message-panel">
+            <h2 className="contact-section-title">Kirim Pesan</h2>
+            <p className="contact-panel-intro">
+              Tertarik berkolaborasi, berdiskusi seputar proyek web, atau memiliki pertanyaan? Kirimkan pesan Anda melalui formulir di bawah ini.
+            </p>
 
-        {/* Contact Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-
-          {/* Left Column: Direct Info & Social Channels */}
-          <div className="lg:col-span-5 space-y-4">
-
-            {/* Email Card with Copy Feature */}
-            <div className="p-6 rounded-2xl bg-[#0f1a30] border border-[#1e355b] space-y-3 shadow-lg">
-              <span className="text-xs text-[#cbd5e1] uppercase tracking-wider block font-medium">
-                Surel / Email Resmi
-              </span>
-              <div className="text-base font-semibold text-[#f5f0e6] break-all">
-                {personalInfo.email}
+            <form onSubmit={handleSendMessage} className="contact-actual-form">
+              <div className="contact-form-field">
+                <label htmlFor="user-name">Nama Lengkap</label>
+                <div className="contact-input-wrap">
+                  <User size={17} aria-hidden="true" />
+                  <input
+                    id="user-name"
+                    name="name"
+                    type="text"
+                    required
+                    maxLength={100}
+                    placeholder="Nama lengkap Anda"
+                    value={msgForm.name}
+                    onChange={(e) => setMsgForm({ ...msgForm, name: e.target.value })}
+                  />
+                </div>
               </div>
-              <div className="flex flex-wrap items-center gap-2 pt-1">
-                <button
-                  type="button"
-                  onClick={handleCopyEmail}
-                  className="min-h-[40px] px-3.5 py-1.5 rounded-lg bg-[#162544] hover:bg-[#1e355b] text-xs font-medium text-[#f5f0e6] border border-[#1e355b] transition-colors flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] cursor-pointer"
-                >
-                  {copiedEmail ? (
-                    <>
-                      <Check className="w-3.5 h-3.5 text-[#38a98c]" />
-                      <span className="text-[#38a98c]">Tersalin ke Clipboard</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3.5 h-3.5 text-[#cbd5e1]" />
-                      <span>Salin Alamat Email</span>
-                    </>
-                  )}
-                </button>
+
+              <div className="contact-form-field">
+                <label htmlFor="user-email">Alamat Email</label>
+                <div className="contact-input-wrap">
+                  <Mail size={17} aria-hidden="true" />
+                  <input
+                    id="user-email"
+                    name="email"
+                    type="email"
+                    required
+                    maxLength={320}
+                    placeholder="nama@email.com"
+                    value={msgForm.email}
+                    onChange={(e) => setMsgForm({ ...msgForm, email: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="contact-form-field">
+                <label htmlFor="user-msg">Pesan Anda</label>
+                <div className="contact-input-wrap contact-textarea-wrap">
+                  <MessageSquare size={17} aria-hidden="true" />
+                  <textarea
+                    id="user-msg"
+                    name="message"
+                    rows={4}
+                    required
+                    maxLength={5000}
+                    placeholder="Tuliskan pesan atau penawaran kerja sama Anda di sini..."
+                    value={msgForm.message}
+                    onChange={(e) => setMsgForm({ ...msgForm, message: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <button type="submit" disabled={sendingMsg} className="contact-submit-btn">
+                <Send size={16} aria-hidden="true" />
+                <span>{sendingMsg ? 'Mengirim...' : 'Kirim Pesan'}</span>
+              </button>
+
+              {msgError && (
+                <p className="contact-comment-error" role="alert">
+                  {msgError}
+                </p>
+              )}
+
+              {msgSuccess && (
+                <div className="contact-success-toast" role="status">
+                  <Check size={18} />
+                  <span>Pesan berhasil dikirim. Terima kasih!</span>
+                </div>
+              )}
+            </form>
+
+            {/* FIND ME Cards */}
+            <div className="contact-find-me">
+              <h3>MEDIA SOSIAL</h3>
+              <div className="contact-social-grid">
                 <a
-                  href={personalInfo.socials.gmail}
+                  href={personalInfo.socials.instagram}
                   target="_blank"
-                  rel="noreferrer"
-                  className="min-h-[40px] px-3.5 py-1.5 rounded-lg bg-[#3178c6]/15 hover:bg-[#3178c6]/25 text-[#4b92e6] text-xs font-medium border border-[#3178c6]/30 transition-colors flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6]"
+                  rel="noopener noreferrer"
+                  className="contact-social-card contact-social-card--instagram"
                 >
-                  <Mail className="w-3.5 h-3.5" />
-                  <span>Buka di Gmail</span>
-                  <ArrowUpRight className="w-3.5 h-3.5" />
-                </a>
-              </div>
-            </div>
-
-            {/* WhatsApp Direct Card */}
-            <a
-              href={personalInfo.whatsapp}
-              target="_blank"
-              rel="noreferrer"
-              className="p-6 rounded-2xl bg-[#0f1a30] border border-[#1e355b] hover:border-[#38a98c]/50 transition-colors block group space-y-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] shadow-lg"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-[#cbd5e1] uppercase tracking-wider font-medium">
-                  WhatsApp Direct
-                </span>
-                <ArrowUpRight className="w-4 h-4 text-[#cbd5e1] group-hover:text-[#f5f0e6] transition-colors" />
-              </div>
-              <div className="text-base font-semibold text-[#f5f0e6] group-hover:text-[#38a98c] transition-colors flex items-center gap-2">
-                <MessageCircle className="w-4 h-4 text-[#38a98c]" />
-                <span>{personalInfo.phone}</span>
-              </div>
-              <p className="text-xs text-[#cbd5e1]">
-                Pesan terenkripsi langsung untuk diskusi mendesak atau respon seketika.
-              </p>
-            </a>
-
-            {/* Social Channels List */}
-            <div className="p-6 rounded-2xl bg-[#0f1a30] border border-[#1e355b] space-y-3 shadow-lg">
-              <span className="text-xs font-mono text-[#9db2d4] uppercase tracking-wider block">
-                Saluran Portofolio & Kode
-              </span>
-              <div className="space-y-2">
-                <a
-                  href={personalInfo.socials.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="p-3 min-h-[44px] rounded-xl bg-[#162544] hover:bg-[#1e355b] border border-[#1e355b]/80 flex items-center justify-between text-xs text-[#9db2d4] hover:text-[#f5f0e6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6]"
-                >
-                  <div className="flex items-center gap-2.5">
-                    <Github className="w-4 h-4 text-[#4b92e6]" />
-                    <span>GitHub (@ihsanpostt)</span>
+                  <span className="contact-social-icon-box">
+                    <svg className="contact-social-logo" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                    </svg>
+                  </span>
+                  <div className="contact-social-text">
+                    <span className="contact-social-label">Instagram</span>
+                    <span className="contact-social-sub">@burhanuddin_ihsan</span>
                   </div>
-                  <ArrowUpRight className="w-3.5 h-3.5 text-[#6780a4]" />
+                  <ExternalLink size={16} className="contact-social-arrow" />
                 </a>
 
                 <a
                   href={personalInfo.socials.linkedin}
                   target="_blank"
-                  rel="noreferrer"
-                  className="p-3 min-h-[44px] rounded-xl bg-[#162544] hover:bg-[#1e355b] border border-[#1e355b]/80 flex items-center justify-between text-xs text-[#9db2d4] hover:text-[#f5f0e6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6]"
+                  rel="noopener noreferrer"
+                  className="contact-social-card contact-social-card--linkedin"
                 >
-                  <div className="flex items-center gap-2.5">
-                    <Linkedin className="w-4 h-4 text-[#4b92e6]" />
-                    <span>LinkedIn (Burhanuddin Ihsan)</span>
+                  <span className="contact-social-icon-box">
+                    <svg className="contact-social-logo" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                  </span>
+                  <div className="contact-social-text">
+                    <span className="contact-social-label">LinkedIn</span>
+                    <span className="contact-social-sub">burhanuddin-ihsan</span>
                   </div>
-                  <ArrowUpRight className="w-3.5 h-3.5 text-[#6780a4]" />
+                  <ExternalLink size={16} className="contact-social-arrow" />
                 </a>
 
                 <a
-                  href={personalInfo.socials.instagram}
+                  href={personalInfo.socials.github}
                   target="_blank"
-                  rel="noreferrer"
-                  className="p-3 min-h-[44px] rounded-xl bg-[#162544] hover:bg-[#1e355b] border border-[#1e355b]/80 flex items-center justify-between text-xs text-[#9db2d4] hover:text-[#f5f0e6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6]"
+                  rel="noopener noreferrer"
+                  className="contact-social-card contact-social-card--github"
                 >
-                  <div className="flex items-center gap-2.5">
-                    <Instagram className="w-4 h-4 text-[#4b92e6]" />
-                    <span>Instagram (@burhanuddin_ihsan)</span>
+                  <span className="contact-social-icon-box">
+                    <svg className="contact-social-logo" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                    </svg>
+                  </span>
+                  <div className="contact-social-text">
+                    <span className="contact-social-label">GitHub</span>
+                    <span className="contact-social-sub">@ihsanpostt</span>
                   </div>
-                  <ArrowUpRight className="w-3.5 h-3.5 text-[#6780a4]" />
+                  <ExternalLink size={16} className="contact-social-arrow" />
                 </a>
               </div>
             </div>
-
           </div>
 
-          {/* Right Column: Real Working Form */}
-          <div className="lg:col-span-7 p-6 sm:p-8 rounded-2xl bg-[#0f1a30] border border-[#1e355b] shadow-xl">
-            {submitStatus === 'success' ? (
-              <div className="text-center py-10 space-y-4">
-                <div className="w-14 h-14 rounded-full bg-[#38a98c]/15 border border-[#38a98c]/30 text-[#38a98c] flex items-center justify-center mx-auto">
-                  <Check className="w-7 h-7" />
-                </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-[#f5f0e6] font-heading">
-                  Pesan Berhasil Terkirim!
-                </h3>
-                <p className="text-[#9db2d4] text-sm max-w-md mx-auto leading-relaxed">
-                  {successChannel === 'whatsapp'
-                    ? 'Pesan Anda telah diteruskan ke WhatsApp Burhanuddin Ihsan untuk respon instan.'
-                    : `Terima kasih atas pesannya, ${formData.name || 'Rekan'}. Notifikasi telah masuk dan balasan akan segera dikirimkan ke ${formData.email || 'surel Anda'}.`}
-                </p>
-                <div className="pt-2">
-                  <button
-                    type="button"
-                    onClick={resetForm}
-                    className="min-h-[44px] px-6 py-2.5 rounded-xl bg-[#162544] hover:bg-[#1e355b] text-[#f5f0e6] border border-[#1e355b] text-xs sm:text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] cursor-pointer"
-                  >
-                    Kirim Pesan Lain
-                  </button>
-                </div>
+          {/* Right Panel: Comments & Guestbook */}
+          <div className="contact-panel contact-comments-panel">
+            <div className="contact-comments-header">
+              <span className="contact-comments-icon">
+                <MessageSquare size={19} />
+              </span>
+              <h2>
+                Komentar &amp; Pesan Masuk <span>({comments.length})</span>
+              </h2>
+            </div>
+
+            <form onSubmit={handleSendComment} className="contact-comment-form">
+              <div className="contact-form-field">
+                <label htmlFor="comment-name">Nama Anda</label>
+                <input
+                  id="comment-name"
+                  type="text"
+                  required
+                  maxLength={50}
+                  placeholder="Masukkan nama Anda"
+                  value={commentForm.name}
+                  onChange={(e) => setCommentForm({ ...commentForm, name: e.target.value })}
+                />
               </div>
-            ) : (
-              <form onSubmit={handleEmailSubmit} noValidate className="space-y-4">
-                {/* Quick Topic / Template Selector Chips */}
-                <div className="space-y-2 pb-2 border-b border-[#1e355b]">
-                  <label className="text-xs font-mono text-[#9db2d4] block">
-                    Pilih Keperluan Cepat (1-Klik):
-                  </label>
-                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                    {QUICK_TEMPLATES.map((tpl, i) => (
-                      <button
-                        key={i}
-                        type="button"
-                        onClick={() => applyTemplate(tpl)}
-                        className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all text-left ${
-                          formData.subject === tpl.subject
-                            ? 'bg-[#3178c6] text-white border-[#4b92e6]'
-                            : 'bg-[#162544] text-[#9db2d4] hover:text-[#f5f0e6] border-[#1e355b] hover:border-[#2c4d82]'
-                        }`}
-                      >
-                        {tpl.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
 
-                {/* Error Banner with Resilient Fallback */}
-                {submitStatus === 'error' && (
-                  <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-xs sm:text-sm text-red-300 space-y-3">
-                    <div className="flex items-start gap-2.5">
-                      <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
-                      <div>
-                        <strong className="block text-red-200 font-semibold mb-0.5">Pengiriman Langsung Membutuhkan Jalur Alternatif</strong>
-                        <span>{errorMessage}</span>
+              <div className="contact-form-field">
+                <label htmlFor="comment-message">Pesan / Komentar</label>
+                <textarea
+                  id="comment-message"
+                  required
+                  maxLength={500}
+                  rows={4}
+                  placeholder="Tulis pesan atau komentar Anda di sini..."
+                  value={commentForm.message}
+                  onChange={(e) => setCommentForm({ ...commentForm, message: e.target.value })}
+                />
+              </div>
+
+              <div className="contact-form-field">
+                <label htmlFor="comment-photo">Foto Profil (opsional)</label>
+                <label className="contact-photo-picker" htmlFor="comment-photo">
+                  <ImageIcon size={17} aria-hidden="true" />
+                  <span>{commentForm.photoName || 'Pilih Foto Profil'}</span>
+                </label>
+                <input
+                  className="contact-photo-input"
+                  id="comment-photo"
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoSelect}
+                />
+                <span className="contact-photo-hint">Ukuran file maksimal 5 MB</span>
+              </div>
+
+              {commentError && (
+                <p className="contact-comment-error" role="alert">
+                  {commentError}
+                </p>
+              )}
+
+              <button type="submit" className="contact-submit-btn" disabled={submittingComment}>
+                <Send size={15} aria-hidden="true" />
+                <span>{submittingComment ? 'Mengirim...' : 'Kirim Komentar'}</span>
+              </button>
+            </form>
+
+            {/* Comments Stream */}
+            <div className="contact-comments-list" aria-live="polite" aria-busy={loadingComments}>
+              {loadingComments ? (
+                <div className="contact-comment-skeleton-list" role="status" aria-label="Memuat komentar">
+                  {[0, 1, 2].map((idx) => (
+                    <div key={idx} className="contact-comment-skeleton" aria-hidden="true">
+                      <span className="skeleton-block contact-comment-skeleton-avatar" />
+                      <span className="contact-comment-skeleton-copy">
+                        <span className="skeleton-block contact-comment-skeleton-name" />
+                        <span className="skeleton-block contact-comment-skeleton-line" />
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : comments.length > 0 ? (
+                comments.map((comment) => (
+                  <article key={comment.id} className="contact-comment-item">
+                    {comment.photo ? (
+                      <img className="contact-comment-avatar" src={comment.photo} alt={comment.name} />
+                    ) : (
+                      <span className="contact-comment-avatar contact-comment-avatar-fallback">
+                        <User size={17} aria-hidden="true" />
+                      </span>
+                    )}
+                    <div className="contact-comment-content">
+                      <div className="contact-comment-meta">
+                        <strong>{comment.name}</strong>
+                        <time dateTime={comment.createdAt}>{formatRelativeTime(comment.createdAt)}</time>
                       </div>
+                      <p>{comment.message}</p>
                     </div>
-                    <div className="flex flex-wrap gap-2 pt-1 border-t border-red-500/20">
-                      <button
-                        type="button"
-                        onClick={handleWhatsAppSubmit}
-                        className="px-3.5 py-1.5 rounded-lg bg-[#38a98c] hover:bg-[#2d8d74] text-white font-medium text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
-                      >
-                        <MessageCircle className="w-3.5 h-3.5" />
-                        <span>Kirim via WhatsApp Sekarang</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleGmailFallback}
-                        className="px-3.5 py-1.5 rounded-lg bg-[#162544] hover:bg-[#1e355b] text-[#f5f0e6] border border-[#1e355b] text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
-                      >
-                        <Mail className="w-3.5 h-3.5 text-[#4b92e6]" />
-                        <span>Kirim via Gmail</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* Field Nama */}
-                  <div className="space-y-1.5">
-                    <label htmlFor="name" className="text-xs font-mono text-[#9db2d4] font-medium block">
-                      Nama Lengkap <span className="text-[#4b92e6]">*</span>
-                    </label>
-                    <input
-                      id="name"
-                      name="name"
-                      type="text"
-                      autoComplete="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      placeholder="cth. Budi Santoso"
-                      className={`w-full min-h-[44px] px-3.5 py-2.5 rounded-xl bg-[#162544] border text-[#f5f0e6] text-sm placeholder:text-[#6780a4] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] ${
-                        errors.name ? 'border-red-500/80 bg-red-500/5' : 'border-[#1e355b]'
-                      }`}
-                    />
-                    {errors.name && (
-                      <p className="text-[11px] font-mono text-red-400 flex items-center gap-1 mt-1">
-                        <AlertCircle className="w-3 h-3 shrink-0" />
-                        <span>{errors.name}</span>
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Field Email */}
-                  <div className="space-y-1.5">
-                    <label htmlFor="email" className="text-xs font-mono text-[#9db2d4] font-medium block">
-                      Alamat Email <span className="text-[#4b92e6]">*</span>
-                    </label>
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      autoComplete="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="cth. budi@perusahaan.com"
-                      className={`w-full min-h-[44px] px-3.5 py-2.5 rounded-xl bg-[#162544] border text-[#f5f0e6] text-sm placeholder:text-[#6780a4] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] ${
-                        errors.email ? 'border-red-500/80 bg-red-500/5' : 'border-[#1e355b]'
-                      }`}
-                    />
-                    {errors.email && (
-                      <p className="text-[11px] font-mono text-red-400 flex items-center gap-1 mt-1">
-                        <AlertCircle className="w-3 h-3 shrink-0" />
-                        <span>{errors.email}</span>
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Field Subjek */}
-                <div className="space-y-1.5">
-                  <label htmlFor="subject" className="text-xs font-mono text-[#9db2d4] font-medium block">
-                    Subjek / Keperluan <span className="text-[#4b92e6]">*</span>
-                  </label>
-                  <input
-                    id="subject"
-                    name="subject"
-                    type="text"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    placeholder="cth. Penawaran Magang Frontend / Diskusi Proyek Web"
-                    className={`w-full min-h-[44px] px-3.5 py-2.5 rounded-xl bg-[#162544] border text-[#f5f0e6] text-sm placeholder:text-[#6780a4] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] ${
-                      errors.subject ? 'border-red-500/80 bg-red-500/5' : 'border-[#1e355b]'
-                    }`}
-                  />
-                  {errors.subject && (
-                    <p className="text-[11px] font-mono text-red-400 flex items-center gap-1 mt-1">
-                      <AlertCircle className="w-3 h-3 shrink-0" />
-                      <span>{errors.subject}</span>
-                    </p>
-                  )}
-                </div>
-
-                {/* Field Pesan */}
-                <div className="space-y-1.5">
-                  <label htmlFor="message" className="text-xs font-mono text-[#9db2d4] font-medium block">
-                    Isi Pesan <span className="text-[#4b92e6]">*</span>
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={4}
-                    value={formData.message}
-                    onChange={handleChange}
-                    placeholder="Tuliskan pesan, rincian tawaran, atau pertanyaan Anda di sini (minimal 10 karakter)..."
-                    className={`w-full px-3.5 py-2.5 rounded-xl bg-[#162544] border text-[#f5f0e6] text-sm placeholder:text-[#6780a4] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] resize-none ${
-                      errors.message ? 'border-red-500/80 bg-red-500/5' : 'border-[#1e355b]'
-                    }`}
-                  />
-                  {errors.message && (
-                    <p className="text-[11px] font-mono text-red-400 flex items-center gap-1 mt-1">
-                      <AlertCircle className="w-3 h-3 shrink-0" />
-                      <span>{errors.message}</span>
-                    </p>
-                  )}
-                </div>
-
-                {/* Tombol Aksi Nyata */}
-                <div className="pt-2 space-y-2.5">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {/* Tombol Kirim Email Formspree */}
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="min-h-[46px] w-full px-4 py-2.5 rounded-xl bg-[#3178c6] hover:bg-[#2664a7] disabled:bg-[#3178c6]/50 text-white font-medium text-xs sm:text-sm transition-colors flex items-center justify-center gap-2 shadow-sm border border-[#4b92e6]/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3178c6] cursor-pointer disabled:cursor-not-allowed"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin text-white" />
-                          <span>Mengirimkan Pesan...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Send className="w-4 h-4" />
-                          <span>Kirim Pesan (Email)</span>
-                        </>
-                      )}
-                    </button>
-
-                    {/* Tombol Kirim Instan via WhatsApp */}
-                    <button
-                      type="button"
-                      disabled={isSubmitting}
-                      onClick={handleWhatsAppSubmit}
-                      className="min-h-[46px] w-full px-4 py-2.5 rounded-xl bg-[#38a98c] hover:bg-[#2d8d74] disabled:opacity-50 text-white font-medium text-xs sm:text-sm transition-colors flex items-center justify-center gap-2 shadow-sm border border-[#38a98c]/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38a98c] cursor-pointer"
-                      title="Kirim pesan ini langsung ke nomor WhatsApp Burhanuddin Ihsan"
-                    >
-                      <MessageCircle className="w-4 h-4" />
-                      <span>Kirim Cepat via WhatsApp</span>
-                    </button>
-                  </div>
-
-                  <p className="text-[11px] font-mono text-[#6780a4] text-center">
-                    Data pesan langsung diteruskan ke inbox resmi & WhatsApp pribadi Burhanuddin Ihsan secara aman tanpa pihak ketiga.
-                  </p>
-                </div>
-              </form>
-            )}
+                  </article>
+                ))
+              ) : (
+                <p className="contact-comments-empty">Belum ada komentar. Jadilah yang pertama memberikan pesan!</p>
+              )}
+            </div>
           </div>
-
         </div>
-
       </div>
     </section>
   );
