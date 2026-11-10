@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from 'react';
 import { Mail, Code2, ArrowUpRight } from 'lucide-react';
-import { personalInfo } from '../data/portofolioData';
 
 export default function About() {
   const sectionRef = useRef(null);
@@ -32,29 +31,55 @@ export default function About() {
   }, []);
 
   const handlePointerMove = (e) => {
+    if (e.pointerType === 'touch') return;
     const stage = stageRef.current;
     const portrait = stage?.querySelector('.about-portrait');
     if (!stage || !portrait) return;
 
     clearTimeout(hoverTimeoutRef.current);
     const rect = portrait.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    if (!rect.width || !rect.height) return;
 
-    stage.style.setProperty('--hover-x', `${x}%`);
-    stage.style.setProperty('--hover-y', `${y}%`);
+    const x = Math.min(100, Math.max(0, ((e.clientX - rect.left) / rect.width) * 100));
+    const y = Math.min(100, Math.max(0, ((e.clientY - rect.top) / rect.height) * 100));
+
+    stage.style.setProperty('--hover-x', `${x.toFixed(2)}%`);
+    stage.style.setProperty('--hover-y', `${y.toFixed(2)}%`);
     stage.classList.add('spider-hovered');
     stage.dataset.spiderVisible = 'true';
   };
 
-  const handlePointerLeave = () => {
+  const handlePointerLeave = (e) => {
+    if (e.pointerType === 'touch') return;
     const stage = stageRef.current;
     if (stage) {
       delete stage.dataset.spiderVisible;
       clearTimeout(hoverTimeoutRef.current);
       hoverTimeoutRef.current = setTimeout(() => {
         stage.classList.remove('spider-hovered');
-      }, 7000);
+      }, 3200);
+    }
+  };
+
+  const handlePointerDown = (e) => {
+    if (e.pointerType !== 'touch') return;
+    const stage = stageRef.current;
+    if (!stage) return;
+
+    clearTimeout(hoverTimeoutRef.current);
+    const isVisible = stage.dataset.spiderVisible === 'true';
+    if (isVisible) {
+      delete stage.dataset.spiderVisible;
+      stage.classList.remove('spider-hovered');
+    } else {
+      stage.style.setProperty('--hover-x', '50%');
+      stage.style.setProperty('--hover-y', '42%');
+      stage.classList.add('spider-hovered');
+      stage.dataset.spiderVisible = 'true';
+      hoverTimeoutRef.current = setTimeout(() => {
+        delete stage.dataset.spiderVisible;
+        stage.classList.remove('spider-hovered');
+      }, 4000);
     }
   };
 
@@ -89,6 +114,7 @@ export default function About() {
           aria-label="Potret Burhanuddin Ihsan"
           onPointerMove={handlePointerMove}
           onPointerLeave={handlePointerLeave}
+          onPointerDown={handlePointerDown}
         >
           <div className="about-portrait">
             <img
@@ -98,7 +124,7 @@ export default function About() {
             />
             <img
               className="about-spider-image"
-              src="/assets/PhotoSpiderman-SN9X5pZn.png"
+              src="/assets/spiderman-suit-v2.png"
               alt="Spider-Man Easter Egg"
               aria-hidden="true"
             />

@@ -1,10 +1,10 @@
 import React from 'react';
-import { Code2, Award, Trophy, GitBranch, GraduationCap } from 'lucide-react';
+import { Code2, Award, GraduationCap } from 'lucide-react';
 import { educationHistory, experienceHistory, statsData } from '../data/portofolioData';
 
 const statIcons = {
   'stats-projects': Code2,
-  'stats-certificates': GitBranch,
+  'stats-certificates': Award,
   'stats-awards': GraduationCap
 };
 
@@ -55,12 +55,9 @@ export default function EducationExperience() {
             const Icon = statIcons[stat.id] || Code2;
             return (
               <article key={stat.id} className="experience-stat-card">
-                <div className="liquid-metal-border" aria-hidden="true" />
                 <div className="experience-stat-top">
-                  <span className="experience-stat-icon">
-                    <Icon size={24} aria-hidden="true" />
-                  </span>
                   <strong>{stat.value}</strong>
+                  <Icon size={20} className="experience-stat-inline-icon" aria-hidden="true" />
                 </div>
                 <h3>{stat.label}</h3>
                 <p>{stat.subtext}</p>

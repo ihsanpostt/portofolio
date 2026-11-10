@@ -42,7 +42,7 @@ export default function Footer() {
               <span className="footer-brand-title">Ihsan.dev</span>
             </div>
             <p className="footer-tagline">
-              Membangun pengalaman web modern dengan presisi kode, antarmuka responsif, dan interaksi 3D berkualitas tinggi.
+              Mahasiswa D4 Teknik Informatika POLINEMA yang berfokus pada pengembangan antarmuka web modern dan aplikasi mobile.
             </p>
           </div>
 

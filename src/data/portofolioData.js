@@ -24,25 +24,25 @@ export const personalInfo = {
   roles: [
     "Junior Web Developer",
     "Mahasiswa D4 TI POLINEMA",
-    "Spesialis React & Tailwind",
-    "Pengembang Web & Penggiat AI"
+    "Frontend Developer (React.js)",
+    "Mobile Developer (Flutter)"
   ]
 };
 
 export const statsData = [
   {
     id: "stats-projects",
-    value: "12+",
-    label: "Proyek Selesai",
-    subtext: "Aplikasi web, portal & simulasi",
+    value: "4",
+    label: "Proyek Portofolio",
+    subtext: "Aplikasi web & machine learning",
     icon: "Code2"
   },
   {
     id: "stats-certificates",
-    value: "450+",
-    label: "Aktivitas Git",
-    subtext: "Commit & kontribusi GitHub",
-    icon: "GitBranch"
+    value: "1",
+    label: "Sertifikat Resmi",
+    subtext: "Kepanitiaan JTI POLINEMA 2025",
+    icon: "Award"
   },
   {
     id: "stats-awards",
@@ -128,7 +128,7 @@ export const projectsData = [
     gradient: "linear-gradient(135deg, #091e3a 0%, #1e3a8a 50%, #3b82f6 100%)",
     description: "Platform web katalog hunian asri dan modern dengan formulir unduh brosur penawaran spesial, informasi perumahan strategis, dan konsultasi interaktif.",
     longDesc: "Hunian Lestari adalah portal properti residensial asri dan berkelanjutan yang dirancang untuk calon pembeli hunian impian keluarga. Menyajikan informasi kawasan strategis, arsitektur ramah lingkungan, alur pemesanan unit, serta form penawaran dan unduh brosur instan.",
-    tags: ["React", "Tailwind CSS", "JavaScript", "Katalog Properti", "Responsive UI", "Vite"],
+    tags: ["React.js", "Tailwind CSS", "JavaScript", "Katalog Properti", "Responsive UI"],
     liveUrl: "https://github.com/ihsanpostt",
     githubUrl: "https://github.com/ihsanpostt/hunian-lestari",
     featured: true,
@@ -147,7 +147,7 @@ export const projectsData = [
     gradient: "linear-gradient(135deg, #064e3b 0%, #047857 50%, #10b981 100%)",
     description: "Aplikasi Sistem Pendukung Keputusan (SPK) multi-kriteria untuk konfigurasi kriteria, pembobotan metode SWARA, dan perankingan alternatif metode WASPAS secara instan.",
     longDesc: "Kalkulator Instan SPK dirancang untuk menyelesaikan evaluasi kelayakan alternatif (seperti penilaian kepemilikan dan kondisi rumah). Sistem memproses input kriteria (benefit/cost), menghitung bobot komparatif SWARA (sj, kj, qj), serta menghasilkan skor preferensi perankingan WASPAS hingga 4 angka desimal akurat.",
-    tags: ["React", "Tailwind CSS", "Metode SWARA", "Metode WASPAS", "Algoritma SPK", "Analisis Data"],
+    tags: ["React.js", "Tailwind CSS", "Metode SWARA", "Metode WASPAS", "Algoritma SPK", "Analisis Data"],
     liveUrl: "https://github.com/ihsanpostt",
     githubUrl: "https://github.com/ihsanpostt/kalkulator-spk-swara-waspas",
     featured: true,
@@ -166,7 +166,7 @@ export const projectsData = [
     gradient: "linear-gradient(135deg, #052e16 0%, #166534 50%, #22c55e 100%)",
     description: "Aplikasi mobile-first untuk identifikasi jenis daun herbal secara instan lewat kamera AI, dilengkapi tingkat akurasi model serta ensiklopedia khasiat medis alami.",
     longDesc: "HerbScan mempermudah identifikasi tanaman obat keluarga (seperti Daun Kemangi, Daun Kumis Kucing, dll.) secara akurat dengan teknologi Computer Vision. Menampilkan riwayat pindai terakhir dengan skor keyakinan AI serta panduan khasiat obat tradisional.",
-    tags: ["Python", "Computer Vision CNN", "React", "Tailwind CSS", "Deep Learning", "Mobile First"],
+    tags: ["Machine Learning", "Computer Vision", "React.js", "Tailwind CSS", "Mobile First"],
     liveUrl: "https://github.com/ihsanpostt",
     githubUrl: "https://github.com/ihsanpostt/herbscan-ai-detection",
     featured: true,
@@ -185,7 +185,7 @@ export const projectsData = [
     gradient: "linear-gradient(135deg, #0c2340 0%, #1e3a8a 50%, #2563eb 100%)",
     description: "Sistem informasi terintegrasi Laboratorium Business Analytics untuk profil anggota lab, showcase proyek analitik, publikasi riset, berita, galeri, dan peminjaman fasilitas.",
     longDesc: "Platform resmi Laboratorium Business Analytics (Business Analyst Lab) yang dikembangkan untuk transparansi dan manajemen kegiatan riset analitik bisnis. Memungkinkan publik dan civitas akademika melihat daftar anggota lab aktif, proyek-proyek analitik data yang dikerjakan di lab, publikasi ilmiah, artikel berita, dokumentasi kegiatan, serta portal peminjaman sarana laboratorium dengan autentikasi Admin Login.",
-    tags: ["React", "Tailwind CSS", "JavaScript", "Business Analytics", "Sistem Informasi Lab", "Dashboard Admin"],
+    tags: ["React.js", "Tailwind CSS", "JavaScript", "Business Analytics", "Sistem Informasi Lab", "Dashboard Admin"],
     liveUrl: "https://github.com/ihsanpostt",
     githubUrl: "https://github.com/ihsanpostt/lab-business-analytics",
     featured: true,
@@ -234,33 +234,50 @@ export const achievementsData = [
 
 export const techStackData = [
   {
-    category: "Pengembangan Frontend",
+    category: "Languages",
     skills: [
-      { name: "React" },
-      { name: "Tailwind CSS" },
+      { name: "Java" },
       { name: "JavaScript" },
-      { name: "HTML5" },
-      { name: "CSS3" }
+      { name: "TypeScript" },
+      { name: "PHP" },
+      { name: "SQL" }
     ]
   },
   {
-    category: "Backend & Basis Data",
+    category: "Frontend",
     skills: [
-      { name: "Python" },
-      { name: "Node.js" },
-      { name: "MySQL" },
-      { name: "PostgreSQL" },
-      { name: "Supabase" }
+      { name: "React.js" },
+      { name: "Bootstrap" },
+      { name: "Tailwind CSS" },
+      { name: "MUI" }
     ]
   },
   {
-    category: "Alat & Alur Kerja",
+    category: "Mobile",
+    skills: [
+      { name: "Flutter" }
+    ]
+  },
+  {
+    category: "Database",
+    skills: [
+      { name: "MySQL" },
+      { name: "PostgreSQL" }
+    ]
+  },
+  {
+    category: "Cloud & Deployment",
+    skills: [
+      { name: "Vercel", isLight: true }
+    ]
+  },
+  {
+    category: "Tools & Others",
     skills: [
       { name: "Git" },
       { name: "GitHub", isLight: true },
-      { name: "Vite" },
-      { name: "VS Code" },
-      { name: "Vercel", isLight: true }
+      { name: "REST API" },
+      { name: "Machine Learning" }
     ]
   }
 ];

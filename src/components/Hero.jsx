@@ -6,10 +6,10 @@ import { personalInfo } from '../data/portofolioData';
 const Lanyard = lazy(() => import('./Lanyard'));
 
 const ROLES = personalInfo.roles || [
-  "3D Creative Developer",
-  "React & Three.js Enthusiast",
-  "Junior Developer",
-  "Web Development"
+  "Junior Web Developer",
+  "Mahasiswa D4 TI POLINEMA",
+  "Frontend Developer (React.js)",
+  "Mobile Developer (Flutter)"
 ];
 
 function GithubIcon({ size = 18 }) {
@@ -115,13 +115,7 @@ export default function Hero({ lanyardIntroStarted = true }) {
       {/* Hero Text Column */}
       <div className="hero-container-inner">
         <div className="hero-text-col">
-          <div className="hero-status-pill">
-            <span className="hero-status-ping-wrap">
-              <span className="hero-status-ping" />
-              <span className="hero-status-dot" />
-            </span>
-            <span className="hero-status-text">Mahasiswa D4 TI POLINEMA &bull; Junior Web Developer</span>
-          </div>
+          <p className="hero-eyebrow">Mahasiswa D4 TI POLINEMA &bull; Junior Web Developer</p>
 
           <div className="hero-heading-group">
             <h1 className="hero-h1-primary">Selamat Datang di</h1>

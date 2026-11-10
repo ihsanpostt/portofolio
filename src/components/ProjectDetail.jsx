@@ -5,23 +5,6 @@ import { TechIcon } from './TechLogos';
 export default function ProjectDetail({ project, onBack }) {
   useEffect(() => {
     window.scrollTo(0, 0);
-
-    const handlePointerMove = (e) => {
-      const x = e.clientX.toFixed(2);
-      const y = e.clientY.toFixed(2);
-      const ratio = e.clientX / window.innerWidth;
-      document.documentElement.style.setProperty('--tech-glow-x', `${x}px`);
-      document.documentElement.style.setProperty('--tech-glow-y', `${y}px`);
-      document.documentElement.style.setProperty('--tech-glow-hue', `${210 + ratio * 100}`);
-    };
-
-    window.addEventListener('pointermove', handlePointerMove, { passive: true });
-    return () => {
-      window.removeEventListener('pointermove', handlePointerMove);
-      document.documentElement.style.removeProperty('--tech-glow-x');
-      document.documentElement.style.removeProperty('--tech-glow-y');
-      document.documentElement.style.removeProperty('--tech-glow-hue');
-    };
   }, []);
 
   return (
